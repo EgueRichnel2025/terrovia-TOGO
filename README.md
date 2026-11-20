@@ -49,6 +49,7 @@ Les données préparées nécessaires au dashboard sont des fichiers locaux sous
 - Documentation technique : docs/TECHNICAL_DOCUMENTATION.md
 - Dictionnaire des données : docs/DATA_DICTIONARY.md
 - État de préparation au Data Challenge : docs/CHALLENGE_READINESS.md
+- Feuille de route de finalisation : docs/ROADMAP_FINALISATION_CHALLENGE.md
 - Politique de publication : docs/PUBLICATION_POLICY.md
 - Analyse exploratoire : reports/ANALYSE_ACCESSIBILITE_POTENTIELLE_2026-11-20.md
 - Registre de provenance : reports/REGISTRE_PROVENANCE_DONNEES.md
