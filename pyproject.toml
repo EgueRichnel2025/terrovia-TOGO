@@ -1,0 +1,39 @@
+[project]
+name = "terrovia-togo"
+version = "0.1.0"
+description = "Diagnostic geospatial de la connectivite des territoires agricoles aux marches et services au Togo."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "geopandas>=1.1,<2",
+    "shapely>=2.1,<3",
+    "pyproj>=3.7,<4",
+    "pyogrio>=0.11,<1",
+    "pandas>=2.3,<4",
+    "scipy>=1.16,<2",
+    "networkx>=3.5,<4",
+    "matplotlib>=3.10,<4",
+    "plotly>=6,<7",
+    "streamlit>=1.50,<2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4,<10",
+    "ruff>=0.14,<1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.uv]
+package = false

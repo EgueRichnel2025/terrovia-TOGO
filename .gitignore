@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+# Environments and secrets
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+# Jupyter
+.ipynb_checkpoints/
+# Source and derived datasets: not published without license/privacy review
+data/raw/*
+data/processed/*
+!data/processed/.gitkeep
+# Detailed audit tables may contain coordinates and personal/contact attributes
+reports/audits/*.csv
+# Local backups and OS files
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
