@@ -1,0 +1,39 @@
+name: Project quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Lint
+        run: uv run ruff check dashboard scripts tests
+
+      - name: Check formatting
+        run: uv run ruff format --check dashboard scripts tests
+
+      - name: Compile
+        run: uv run python -m compileall -q dashboard scripts tests
+
+      - name: Test
+        run: uv run pytest -q
