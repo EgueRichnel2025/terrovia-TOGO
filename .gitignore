@@ -27,3 +27,10 @@ reports/audits/*.csv
 *~
 .DS_Store
 Thumbs.db
+
+# Internal working notes and unreviewed audit drafts
+docs/PROJECT_HANDOFF.md
+docs/START_HERE_FOR_NEXT_AI.md
+docs/WORK_LOG.md
+reports/AUDIT_*.md
+reports/GEOMETRY_REPAIR_REVIEW_*.md
