@@ -52,6 +52,7 @@ Les données préparées nécessaires au dashboard sont des fichiers locaux sous
 - Feuille de route de finalisation : docs/ROADMAP_FINALISATION_CHALLENGE.md
 - Politique de publication : docs/PUBLICATION_POLICY.md
 - Analyse exploratoire : reports/ANALYSE_ACCESSIBILITE_POTENTIELLE_2026-11-20.md
+- Note décisionnelle territoriale : reports/NOTE_DECISIONNELLE_TERRITORIALE_2026-11-20.md
 - Registre de provenance : reports/REGISTRE_PROVENANCE_DONNEES.md
 
 ## Structure

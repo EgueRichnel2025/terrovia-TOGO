@@ -1,7 +1,7 @@
 # TERROVIA — Feuille de route de finalisation du Data Challenge
 
 **Mise à jour : 20 novembre 2026**
-**Dépôt visé :** `EgueRichnel2025/terrovia-togo`
+**Dépôt publié :** `EgueRichnel2025/terrovia-TOGO`
 **Branche :** `main`
 
 Ce fichier est le point de reprise central du projet. À chaque session, le lire en premier, mettre les cases à jour après vérification des livrables et reprendre la première tâche inachevée.
@@ -17,11 +17,11 @@ Ce fichier est le point de reprise central du projet. À chaque session, le lire
 | Dashboard Python | 🟠 À finaliser | Trois pages, filtres et indicateurs ; parcours jury, revue visuelle réelle et données reproductibles à vérifier. |
 | Analyses agricoles complémentaires | 🔴 À faire | Densité agricole, couverture ZAAP/ZAPB, analyse approfondie du réseau coopératif. |
 | Accessibilité routière | 🔴 Non réalisée | Graphe routier non validé ; aucun temps de trajet ou itinéraire ne doit être annoncé. Extension conditionnelle. |
-| Recommandations territoriales | 🔴 À faire | Passer des constats à des pistes d'action justifiées. |
+| Recommandations territoriales | 🟠 Partiel | Note décisionnelle produite ; validations terrain et compléments à poursuivre. |
 | Rapport final | 🟠 Partiel | Analyses et documentation existantes ; synthèse argumentée à produire. |
 | PowerPoint | 🔴 À faire | Support de présentation à produire ; règles et nombre de diapositives à confirmer. |
-| Dépôt Git local | ✅ Initialisé | Sept commits sur `main` avant le présent fichier. |
-| Dépôt GitHub public | 🟠 À créer et publier | Dépôt distant non créé, aucun push effectué. |
+| Dépôt Git local | ✅ Initialisé | Branche `main` avec huit commits initiaux et les commits de finalisation à venir. |
+| Dépôt GitHub public | ✅ Publié | `origin/main` contient les huit commits initiaux ; les changements de finalisation restent à pousser après validation. |
 | Paquet de soumission | 🔴 À faire | Formats et pièces exactes à confirmer dans la FAQ et le formulaire. |
 
 ## 2. Cadre du challenge : confirmé / à confirmer
@@ -60,13 +60,14 @@ Revalider ces informations sur le formulaire officiel au moment de la soumission
 
 **Objectif :** rendre le code consultable et conserver un historique propre.
 
-- [ ] Créer un dépôt vide `terrovia-togo` sous le compte `EgueRichnel2025`.
-- [ ] Choisir **Public**.
-- [ ] Ne pas demander à GitHub d'ajouter un README, un .gitignore ou une licence : les fichiers existent déjà localement.
-- [ ] Ajouter le dépôt distant sous le nom `origin`.
-- [ ] Pousser la branche `main) et son historique.
-- [ ] Vérifier les commits, le README et l'absence de données exclues sur la page publique.
-- [ ] Choisir explicitement une licence de code avant d'autoriser la réutilisation du code.
+- [x] Créer un dépôt public `terrovia-TOGO` sous le compte `EgueRichnel2025`.
+- [x] Choisir **Public**.
+- [x] Ne pas demander à GitHub d'ajouter un README ou un .gitignore : les fichiers existaient déjà localement.
+- [ ] Choisir explicitement une licence de code avant d'autoriser la réutilisation.
+- [x] Ajouter/vérifier le dépôt distant sous le nom `origin`.
+- [x] Pousser la branche `main` et son historique initial (8 commits).
+- [x] Vérifier les huit commits, le README et l'exclusion des données brutes/détaillées.
+
 
 Commandes après création du dépôt vide :
 
@@ -233,7 +234,7 @@ Préfixes : `data:`, `feat:`, `fix:`, `docs:`, `test:`, `ci:`, `chore:`.
 
 ## 6. État Git connu au 20 novembre 2026
 
-Sept commits locaux ont été créés avant ce document :
+Huit commits locaux initiaux ont été créés avant les travaux de finalisation :
 
 1. `b8fd87a` — chore: initialize TERROVIA public project structure
 2. `c3e5fc0` — feat: add interactive geospatial accessibility dashboard
@@ -242,14 +243,15 @@ Sept commits locaux ont été créés avant ce document :
 5. `9ee1ab7` — docs: publish methodology and aggregated accessibility findings
 6. `1d9ca92` — ci: automate lint formatting compilation and tests
 7. `d65da78` — chore: exclude internal notes and preserve empty data directory
+8. `2dc4081` — docs: add challenge finalization roadmap
 
-Le dépôt GitHub distant n'est pas encore créé et aucun push n'a été effectué.
+Le dépôt public `EgueRichnel2025/terrovia-TOGO` est créé ; les huit commits initiaux ont été poussés sur `main` et vérifiés synchronisés.
 
 ## 7. Prochaine action immédiate
 
-1. Créer le dépôt public vide `EgueRichnel2025/terrovia-togo` sur GitHub.
-2. Ajouter `origin` et pousser `main`.
-3. Vérifier la page publique et les exclusions de données.
-4. Reprendre à la Phase 1 pour confirmer les règles officielles, puis attaquer la Phase 2.
+1. Confirmer les consignes exactes du formulaire officiel de cette édition.
+2. Consolider les résultats territoriaux et les recommandations à partir des données déjà calculées.
+3. Finaliser rapport et dashboard en traitant la dépendance aux données locales non publiées.
+4. Produire les pièces strictement demandées, puis vérifier et pousser chaque changement.
 
 **Règle de reprise :** ne jamais déclarer une phase terminée sur la seule base d'une intention. Exiger un livrable et sa vérification.

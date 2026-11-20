@@ -23,13 +23,13 @@ Prudence : l'annonce publique de l'édition spéciale ne détaille pas à elle s
 | Contrôle qualité des données | FAIT / À CONSOLIDER | Audits géométriques, cohérence territoriale, réparations et quarantaine documentés. |
 | Analyse exploratoire | PARTIEL | Distances euclidiennes, statistiques nationales et régionales réalisées. |
 | Dashboard Python interactif | FAIT / À FINALISER | Streamlit avec synthèse, exploration et méthode ; revue visuelle finale et parcours jury à effectuer. |
-| Pertinence du rapport | PARTIEL | Analyses et méthodologie disponibles ; narration finale orientée décision à construire. |
+| Pertinence du rapport | PARTIEL | Analyse exploratoire, méthodologie et note décisionnelle disponibles ; rapport final consolidé à produire. |
 | Interactivité | FAIT / À AMÉLIORER | Filtres territoriaux et par service, comparaisons, tableaux et exports. |
 | Ergonomie | PARTIEL | Navigation et responsive renforcés ; revue visuelle et tests utilisateurs à effectuer. |
-| Recommandations concrètes | À FAIRE | Transformer les constats en priorités d'investigation proportionnées aux limites. |
+| Recommandations concrètes | PARTIEL | Une note décisionnelle propose des priorités d'investigation ; validation terrain et enrichissement à poursuivre. |
 | PowerPoint | À FAIRE / À CONFIRMER | À produire comme support de synthèse ; caractère obligatoire et limite de slides à confirmer. |
 | Paquet de soumission | À FAIRE | Préparer et vérifier les fichiers exacts exigés par le formulaire. |
-| Dépôt Git public | EN PRÉPARATION | Politique de publication définie ; revue des données et licences avant push. |
+| Dépôt Git public | PUBLIÉ | Dépôt public créé et huit commits synchronisés ; données détaillées exclues. |
 
 ## Extensions analytiques utiles — pas des exigences officielles explicites
 
@@ -50,6 +50,14 @@ Prudence : l'annonce publique de l'édition spéciale ne détaille pas à elle s
 5. Produire un PowerPoint court si utile et conforme aux règles confirmées.
 6. Effectuer les revues scientifique, visuelle, responsive et de reproductibilité.
 7. Préparer le paquet de soumission et contrôler licences et données personnelles.
+
+## Contrôles techniques du 20 novembre 2026
+
+- `uv run pytest -q` : 4 tests réussis après ajout de `pythonpath = ["."]` à la configuration pytest.
+- Ruff : contrôle et formatage vérifiés.
+- Compilation Python : réussie.
+- Dépôt : huit commits synchronisés avec `origin/main` avant les ajouts de finalisation.
+- Limite majeure : les données de `data/raw/` et `data/processed/` sont exclues du dépôt public ; le dashboard nécessite ces fichiers locaux et ne peut pas être lancé par un clone seul. Une solution de démonstration/diffusion conforme aux licences reste à définir.
 
 ## Sources publiques
 
