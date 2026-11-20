@@ -61,6 +61,25 @@ METRICS = {
 
 @st.cache_data(show_spinner="Chargement des données territoriales…")
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict, dict]:
+    required = [
+        "small_farms_potential_accessibility.csv",
+        "regional_accessibility_summary.csv",
+        "regions_accessibility.geojson",
+        "methodology.json",
+    ]
+    missing = [name for name in required if not (DATA / name).is_file()]
+    if missing:
+        st.error("Les données locales nécessaires au tableau de bord ne sont pas disponibles.")
+        st.markdown(
+            "Le dépôt public contient le code et la méthodologie, mais pas les données détaillées. "
+            "Elles ne sont pas redistribuées tant que leurs licences et conditions de réutilisation "
+            "ne sont pas confirmées."
+        )
+        st.markdown("Après validation des droits d'accès, placez les fichiers requis dans :")
+        st.code("data/processed/accessibility/")
+        st.code("\n".join(missing))
+        st.stop()
+
     farms = pd.read_csv(DATA / "small_farms_potential_accessibility.csv")
     summary = pd.read_csv(DATA / "regional_accessibility_summary.csv")
     with (DATA / "regions_accessibility.geojson").open(encoding="utf-8") as stream:
@@ -770,6 +789,70 @@ def render_dashboard_content(page_key: str) -> None:
                 "Ces effectifs décrivent uniquement les entités du fichier analysé. "
                 "Ils ne constituent pas une mesure de densité agricole."
             )
+
+        section_header(
+            "Pistes d'investigation",
+            "Trois signaux à vérifier sur le terrain",
+            "Des priorités de vérification, pas un classement d'investissement",
+        )
+        regional = farms.groupby("region_nom_bdd", dropna=True)
+        signals = regional.agg(
+            exploitations=("market_distance_km", "size"),
+            market_median=("market_distance_km", "median"),
+            market_over_5=("market_distance_km", lambda x: (x > 5).mean() * 100),
+            input_median=("input_store_distance_km", "median"),
+            input_p90=("input_store_distance_km", lambda x: x.quantile(0.9)),
+            input_over_10=("input_store_distance_km", lambda x: (x > 10).mean() * 100),
+            nursery_polygon_median=("nursery_other_distance_km", "median"),
+        )
+        signals = signals.reset_index()
+        savanes_rows = signals.loc[signals.region_nom_bdd.eq("Savanes")]
+        plateaux_rows = signals.loc[signals.region_nom_bdd.eq("Plateaux")]
+        if not savanes_rows.empty and not plateaux_rows.empty:
+            savanes = savanes_rows.iloc[0]
+            plateaux = plateaux_rows.iloc[0]
+            cards = st.columns(3, gap="medium")
+            with cards[0]:
+                with st.container(border=True):
+                    st.markdown("**Savanes · Magasins d'intrants**")
+                    st.metric("Exploitations à plus de 10 km", f"{savanes.input_over_10:.1f} %")
+                    st.caption(
+                        f"Médiane : {savanes.input_median:.2f} km · P90 : {savanes.input_p90:.2f} km · "
+                        f"{int(savanes.exploitations):,} exploitations".replace(",", " ")
+                    )
+                    st.write(
+                        "À vérifier : activité des magasins, stocks et circuits d'approvisionnement."
+                    )
+            with cards[1]:
+                with st.container(border=True):
+                    st.markdown("**Plateaux · Marchés**")
+                    st.metric("Exploitations à plus de 5 km", f"{plateaux.market_over_5:.1f} %")
+                    st.caption(
+                        f"Médiane : {plateaux.market_median:.2f} km · "
+                        f"{int(plateaux.exploitations):,} exploitations".replace(",", " ")
+                    )
+                    st.write(
+                        "À vérifier : localités concernées, marchés fréquentés et itinéraires praticables."
+                    )
+            with cards[2]:
+                with st.container(border=True):
+                    st.markdown("**Savanes · Pépinières surfaciques**")
+                    st.metric(
+                        "Distance médiane observée", f"{savanes.nursery_polygon_median:.1f} km"
+                    )
+                    st.caption(
+                        f"Médiane nationale : {farms.nursery_other_distance_km.median():.2f} km · "
+                        "signal atypique à contrôler"
+                    )
+                    st.write(
+                        "À vérifier : couverture de l'inventaire, géolocalisation et présence réelle."
+                    )
+            st.caption(
+                "Ces signaux orientent les vérifications. Une distance en ligne droite ne prouve ni "
+                "l'absence de service ni une difficulté de déplacement."
+            )
+        else:
+            st.info("Les données ne permettent pas de calculer toutes les pistes territoriales.")
 
         st.info(
             "Pour examiner une région, choisir un service précis et repérer les communes à approfondir, "
