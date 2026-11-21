@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import sys
 from math import ceil
 from pathlib import Path
 
@@ -13,9 +14,12 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from dashboard.aggregate_preview import load_aggregate_data, render_aggregate_preview
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from dashboard.aggregate_preview import load_aggregate_data, render_aggregate_preview  # noqa: E402
+
 DATA = ROOT / "data/processed/accessibility"
 
 PALETTE = {
