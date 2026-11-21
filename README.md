@@ -31,6 +31,7 @@ Prérequis : Python 3.13 et uv.
 Installation et lancement depuis la racine :
 
     uv sync
+    uv run python scripts/prepare_streamlit_french.py
     uv run streamlit run dashboard/app.py
 
 Les données préparées nécessaires au dashboard sont des fichiers locaux sous data/processed/. Elles ne sont pas incluses dans ce dépôt public. Leur provenance, leurs licences et leurs conditions d'accès doivent être vérifiées avant utilisation.

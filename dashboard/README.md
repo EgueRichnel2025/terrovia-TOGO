@@ -3,6 +3,7 @@
 ## Lancer
 
     uv sync
+    uv run python scripts/prepare_streamlit_french.py
     uv run streamlit run dashboard/app.py
 
 Puis ouvrir l'adresse locale affichée par Streamlit, généralement http://localhost:8501.
@@ -41,3 +42,5 @@ Elle ne reconstruit pas automatiquement ces fichiers à partir des sources brute
 ## Précaution d'interprétation
 
 Les distances sont euclidiennes, en ligne droite, en EPSG:32631. Elles ne représentent ni un trajet routier ni un temps de parcours. Les seuils sont descriptifs et non normatifs. La présence d'un équipement dans les données ne garantit pas son fonctionnement.
+
+Le script scripts/prepare_streamlit_french.py règle aussi la langue du document HTML servi par Streamlit (fr) et empêche sa traduction automatique partielle par le navigateur. Il faut le relancer après une réinstallation ou une mise à jour de Streamlit. Pour rétablir le document d’origine : uv run python scripts/prepare_streamlit_french.py --restore.
