@@ -23,16 +23,16 @@ from dashboard.aggregate_preview import load_aggregate_data, render_aggregate_pr
 DATA = ROOT / "data/processed/accessibility"
 
 PALETTE = {
-    "forest": "#173F3A",
-    "forest_light": "#24554E",
-    "sand": "#F3F0E7",
-    "paper": "#FFFEFA",
-    "ink": "#203A36",
-    "muted": "#78847D",
-    "clay": "#D97757",
-    "gold": "#D8A64B",
-    "line": "#E7E4DA",
-    "mint": "#E4EEE8",
+    "forest": "#3D554A",
+    "forest_light": "#5D7668",
+    "sand": "#F2F1EA",
+    "paper": "#FBFAF6",
+    "ink": "#293B34",
+    "muted": "#6E7A71",
+    "clay": "#B77E68",
+    "gold": "#B69B70",
+    "line": "#E2E1D8",
+    "mint": "#E8ECE6",
 }
 
 METRICS = {
@@ -116,38 +116,38 @@ def inject_theme() -> None:
         [data-testid="stSidebar"] {{
             background: var(--forest); border-right: 1px solid rgba(255,255,255,.08);
         }}
-        [data-testid="stSidebar"] * {{ color: #F4F1E8; }}
-        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{ color: #D4E0D8; }}
+        [data-testid="stSidebar"] * {{ color: #F5F2E9; }}
+        [data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p {{ color: #DCE4DC; }}
         [data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {{
-            color: #E2EAE3; font-size: .78rem; font-weight: 600; letter-spacing: .02em;
+            color: #E7ECE6; font-size: .78rem; font-weight: 600; letter-spacing: .02em;
         }}
         /* Selectbox: surface claire + texte sombre, y compris la valeur sélectionnée. */
         [data-testid="stSidebar"] [data-baseweb="select"] > div {{
-            background: #FFFEFA !important; border: 1px solid #D8DED7 !important;
+            background: #FBFAF6 !important; border: 1px solid #D8DED7 !important;
             border-radius: 10px !important; min-height: 42px;
         }}
         [data-testid="stSidebar"] [data-baseweb="select"] [data-testid="stMarkdownContainer"],
         [data-testid="stSidebar"] [data-baseweb="select"] div,
         [data-testid="stSidebar"] [data-baseweb="select"] span {{
-            color: #173F3A !important; -webkit-text-fill-color: #173F3A !important;
+            color: #3D554A !important; -webkit-text-fill-color: #3D554A !important;
         }}
         [data-testid="stSidebar"] [data-baseweb="select"] input {{
-            color: #173F3A !important; -webkit-text-fill-color: #173F3A !important;
-            caret-color: #173F3A !important;
+            color: #3D554A !important; -webkit-text-fill-color: #3D554A !important;
+            caret-color: #3D554A !important;
         }}
-        [data-testid="stSidebar"] [data-baseweb="select"] svg {{ fill: #173F3A !important; }}
+        [data-testid="stSidebar"] [data-baseweb="select"] svg {{ fill: #3D554A !important; }}
         /* Le menu déroulant BaseWeb est rendu dans un portail hors de la sidebar. */
         [data-baseweb="popover"] [data-baseweb="menu"],
-        [data-baseweb="popover"] ul {{ background: #FFFEFA !important; }}
+        [data-baseweb="popover"] ul {{ background: #FBFAF6 !important; }}
         [data-baseweb="popover"] [role="option"],
         [data-baseweb="popover"] [role="option"] * {{
-            color: #173F3A !important; -webkit-text-fill-color: #173F3A !important;
+            color: #3D554A !important; -webkit-text-fill-color: #3D554A !important;
         }}
-        [data-baseweb="popover"] [role="option"]:hover {{ background: #E4EEE8 !important; }}
+        [data-baseweb="popover"] [role="option"]:hover {{ background: #E8ECE6 !important; }}
         [data-testid="stSidebar"] [data-testid="stSlider"] [data-baseweb="slider"] {{ padding-top: .35rem; }}
-        [data-testid="stSidebar"] [data-testid="stSlider"] [role="slider"] {{ background: #E2B66F; border-color: #E2B66F; }}
+        [data-testid="stSidebar"] [data-testid="stSlider"] [role="slider"] {{ background: #C5AD85; border-color: #C5AD85; }}
         [data-testid="stSidebar"] hr {{ border-color: rgba(255,255,255,.17); }}
-        [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {{ color: #B8CBC0; font-size: .72rem; }}
+        [data-testid="stSidebar"] [data-testid="stCaptionContainer"] p {{ color: #C7D3CA; font-size: .72rem; }}
         [data-testid="stPlotlyChart"] {{
             background: transparent; border-radius: 14px;
         }}
@@ -164,15 +164,15 @@ def inject_theme() -> None:
         [data-testid="stDownloadButton"] button:hover {{ background: var(--forest-light); color: white; }}
         .brand-lockup {{ display:flex; align-items:center; gap:11px; margin: .25rem 0 2.1rem; }}
         .brand-mark {{
-            width:40px; height:40px; border-radius:13px; background:#D9A65C;
-            display:flex; align-items:center; justify-content:center; color:#173F3A;
+            width:40px; height:40px; border-radius:13px; background:#C4A47A;
+            display:flex; align-items:center; justify-content:center; color:#3D554A;
             font-family:'Manrope',sans-serif; font-weight:800; font-size:1rem;
         }}
-        .brand-name {{ color:#FFFDF5; font:800 1.12rem 'Manrope',sans-serif; letter-spacing:.08em; }}
-        .brand-sub {{ color:#B8CBC0; font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; margin-top:2px; }}
-        .side-kicker {{ color:#D9A65C; font-size:.66rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; margin:0 0 .45rem; }}
-        .side-title {{ color:#FFFDF5; font:700 1.05rem 'Manrope',sans-serif; margin:0 0 .35rem; }}
-        .side-copy {{ color:#B8CBC0; font-size:.88rem; line-height:1.6; margin-bottom:1.15rem; }}
+        .brand-name {{ color:#FBF8EF; font:800 1.12rem 'Manrope',sans-serif; letter-spacing:.08em; }}
+        .brand-sub {{ color:#C7D3CA; font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; margin-top:2px; }}
+        .side-kicker {{ color:#C4A47A; font-size:.66rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; margin:0 0 .45rem; }}
+        .side-title {{ color:#FBF8EF; font:700 1.05rem 'Manrope',sans-serif; margin:0 0 .35rem; }}
+        .side-copy {{ color:#C7D3CA; font-size:.88rem; line-height:1.6; margin-bottom:1.15rem; }}
         .hero {{
             background:var(--forest); color:#F9F6EC; padding:1.25rem 1.55rem 1.2rem;
             border-radius:20px; position:relative; overflow:hidden; margin-bottom:1.25rem;
@@ -184,16 +184,16 @@ def inject_theme() -> None:
             box-shadow:0 0 0 32px rgba(222,183,120,.035),0 0 0 70px rgba(222,183,120,.025);
         }}
         .hero-top {{ display:flex; align-items:center; gap:10px; margin-bottom:.8rem; position:relative; z-index:1; }}
-        .hero-tag {{ font-size:.74rem; font-weight:700; letter-spacing:.12em; color:#E5B873; text-transform:uppercase; }}
-        .hero-dot {{ width:4px; height:4px; border-radius:50%; background:#E5B873; }}
+        .hero-tag {{ font-size:.74rem; font-weight:700; letter-spacing:.12em; color:#CDB58D; text-transform:uppercase; }}
+        .hero-dot {{ width:4px; height:4px; border-radius:50%; background:#CDB58D; }}
         .hero h1 {{
-            color:#FFFDF5; font:800 clamp(1.5rem,2.15vw,2rem) 'Manrope',sans-serif;
+            color:#FBF8EF; font:800 clamp(1.5rem,2.15vw,2rem) 'Manrope',sans-serif;
             letter-spacing:-.045em; line-height:1.12; margin:0 0 .6rem; max-width:820px; position:relative; z-index:1;
         }}
-        .hero p {{ color:#D6E1D9; font-size:.91rem; max-width:780px; line-height:1.55; margin:0; position:relative; z-index:1; }}
+        .hero p {{ color:#E1E7E0; font-size:.91rem; max-width:780px; line-height:1.55; margin:0; position:relative; z-index:1; }}
         .hero-foot {{ display:flex; gap:18px; flex-wrap:wrap; margin-top:1.1rem; position:relative; z-index:1; }}
-        .hero-foot span {{ color:#D6E1D9; font-size:.78rem; letter-spacing:.02em; }}
-        .hero-foot b {{ color:#FFFDF5; font-weight:700; }}
+        .hero-foot span {{ color:#E1E7E0; font-size:.78rem; letter-spacing:.02em; }}
+        .hero-foot b {{ color:#FBF8EF; font-weight:700; }}
         .section-head {{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin:1.5rem 0 .7rem; }}
         .section-kicker {{ color:var(--clay); font-size:.73rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; margin-bottom:.2rem; }}
         .section-title {{ color:var(--ink); font:800 1.08rem 'Manrope',sans-serif; letter-spacing:-.025em; margin:0; }}
@@ -205,27 +205,27 @@ def inject_theme() -> None:
         .kpi-label {{ color:var(--muted); font-size:.82rem; font-weight:600; margin-bottom:.55rem; }}
         .kpi-value {{ color:var(--ink); font:800 1.65rem 'Manrope',sans-serif; letter-spacing:-.055em; line-height:1.08; }}
         .kpi-unit {{ color:var(--forest-light); font-size:.84rem; font-weight:700; margin-left:3px; }}
-        .kpi-foot {{ color:#89958D; font-size:.74rem; line-height:1.4; margin-top:.55rem; }}
+        .kpi-foot {{ color:#768178; font-size:.74rem; line-height:1.4; margin-top:.55rem; }}
         .panel {{ background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:1rem 1rem .6rem; }}
         .panel-title {{ color:var(--ink); font:700 .94rem 'Manrope',sans-serif; margin:0 0 .15rem; }}
         .panel-sub {{ color:var(--muted); font-size:.79rem; margin:0 0 .65rem; }}
         .insight {{
-            border-left:3px solid var(--clay); padding:.75rem .9rem; background:#F8F1E7;
-            border-radius:0 10px 10px 0; color:#53645B; font-size:.88rem; line-height:1.6;
+            border-left:3px solid var(--clay); padding:.75rem .9rem; background:#EEECE3;
+            border-radius:0 10px 10px 0; color:#4F5F55; font-size:.88rem; line-height:1.6;
         }}
         .insight strong {{ color:var(--forest); }}
         .method-banner {{
-            background:#E7EEE8; border:1px solid #D3E1D8; border-radius:11px;
-            color:#405A50; padding:.72rem .95rem; font-size:.75rem; line-height:1.55;
+            background:#E9EDE7; border:1px solid #D9E1D9; border-radius:11px;
+            color:#46594F; padding:.72rem .95rem; font-size:.75rem; line-height:1.55;
             margin:.15rem 0 .25rem;
         }}
-        .method-banner b {{ color:#24554E; font-size:.65rem; letter-spacing:.1em; margin-right:.35rem; }}
-        .method-banner strong {{ color:#A34E3C; }}
+        .method-banner b {{ color:#5D7668; font-size:.65rem; letter-spacing:.1em; margin-right:.35rem; }}
+        .method-banner strong {{ color:#9A6557; }}
         .status-pill {{
             display:inline-block; padding:.28rem .55rem; border-radius:30px;
-            background:#E5EEE8; color:#28564B; font-size:.63rem; font-weight:700; letter-spacing:.04em;
+            background:#E9EDE7; color:#526B60; font-size:.63rem; font-weight:700; letter-spacing:.04em;
         }}
-        .footnote {{ color:#7D8981; font-size:.76rem; line-height:1.55; padding:.8rem .1rem; }}
+        .footnote {{ color:#747F77; font-size:.76rem; line-height:1.55; padding:.8rem .1rem; }}
         /* Mise en page fluide : les colonnes se réorganisent selon la largeur disponible. */
         [data-testid="stMainBlockContainer"] {{
             width: 100%;
@@ -414,16 +414,16 @@ def inject_theme() -> None:
             }}
         }}
         .stTabs [data-baseweb="tab-list"] {{
-            gap: .45rem; border-bottom: 1px solid #DEDCD3; margin-bottom: 1.2rem;
+            gap: .45rem; border-bottom: 1px solid #E2E1D8; margin-bottom: 1.2rem;
         }}
         .stTabs [data-baseweb="tab"] {{
             padding: .65rem 1rem; font-size: .9rem; font-weight: 650;
         }}
         .stTabs [aria-selected="true"] {{
-            color: #173F3A !important; border-bottom-color: #D97757 !important;
+            color: #3D554A !important; border-bottom-color: #B77E68 !important;
         }}
         [data-testid="stExpander"] {{
-            border: 1px solid #E2DFD5; border-radius: 12px; background: #FFFEFA;
+            border: 1px solid #E2E1D8; border-radius: 12px; background: #FBFAF6;
         }}
         /* Lisibilité renforcée : textes, navigation, contrôles et tableaux. */
         [data-testid="stMarkdownContainer"] p,
@@ -459,6 +459,52 @@ def inject_theme() -> None:
         .method-banner {{ font-size: .9rem; line-height: 1.7; }}
         .method-banner b {{ font-size: .76rem; }}
         .footnote {{ font-size: .88rem; }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Harmonise the remaining native Streamlit controls and notices with the soft palette.
+    st.markdown(
+        """
+        <style>
+        [data-testid="stAlert"] {
+            background: #EDF0E9 !important;
+            border: 1px solid #D9E1D8 !important;
+            border-radius: 13px !important;
+        }
+        [data-testid="stAlert"] [data-testid="stMarkdownContainer"] p,
+        [data-testid="stAlert"] [data-testid="stMarkdownContainer"] li {
+            color: #43564B !important;
+        }
+        [data-testid="stAlert"] svg {
+            color: #708777 !important;
+            fill: #708777 !important;
+        }
+        [data-testid="stMetricValue"] {
+            color: #3D554A !important;
+        }
+        [data-testid="stMetricLabel"] {
+            color: #64746A !important;
+        }
+        [data-testid="stButton"] button,
+        [data-testid="stDownloadButton"] button {
+            background: #5D7668 !important;
+            border-color: #5D7668 !important;
+            color: #FBFAF6 !important;
+        }
+        [data-testid="stButton"] button:hover,
+        [data-testid="stDownloadButton"] button:hover {
+            background: #4D685A !important;
+            border-color: #4D685A !important;
+        }
+        [data-testid="stSelectbox"] [aria-selected="true"],
+        [data-baseweb="menu"] [aria-selected="true"] {
+            background: #E8ECE6 !important;
+        }
+        :focus-visible {
+            outline-color: #84988A !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -542,10 +588,10 @@ def make_map(map_data: pd.DataFrame, geojson: dict, median_col: str) -> object:
             "farm_count": ":,",
             median_col: ":.2f",
         },
-        color_continuous_scale=["#F0D98B", "#E3A75D", "#D97757", "#A94738"],
+        color_continuous_scale=["#EAE8DE", "#C8CEBE", "#98AA9A", "#60796D"],
         labels={median_col: "Médiane (km)", "farm_count": "Exploitations"},
     )
-    fig.update_traces(marker_line_color="#FFFEFA", marker_line_width=2.2)
+    fig.update_traces(marker_line_color="#FBFAF6", marker_line_width=2.2)
     fig.update_geos(
         fitbounds="locations",
         visible=False,
@@ -600,7 +646,7 @@ def make_regional_bar(summary: pd.DataFrame, median_col: str, selected_region: s
         paper_bgcolor=PALETTE["paper"],
         plot_bgcolor=PALETTE["paper"],
         font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"], "size": 10},
-        xaxis={"showgrid": True, "gridcolor": "#ECEAE2", "zeroline": False, "title": None},
+        xaxis={"showgrid": True, "gridcolor": "#E9E8E0", "zeroline": False, "title": None},
         yaxis={"showgrid": False, "title": None, "tickfont": {"size": 10}},
         showlegend=False,
     )
@@ -720,7 +766,7 @@ def render_dashboard_content(page_key: str) -> None:
                 paper_bgcolor=PALETTE["paper"],
                 plot_bgcolor=PALETTE["paper"],
                 font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"], "size": 12},
-                xaxis={"showgrid": True, "gridcolor": "#ECEAE2", "title": None},
+                xaxis={"showgrid": True, "gridcolor": "#E9E8E0", "title": None},
                 yaxis={"showgrid": False, "title": None},
                 showlegend=False,
             )
@@ -1096,7 +1142,7 @@ def render_dashboard_content(page_key: str) -> None:
                 plot_bgcolor=PALETTE["paper"],
                 font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"], "size": 12},
                 xaxis={"showgrid": False, "title": "Distance en ligne droite (km)"},
-                yaxis={"showgrid": True, "gridcolor": "#ECEAE2", "title": "Exploitations"},
+                yaxis={"showgrid": True, "gridcolor": "#E9E8E0", "title": "Exploitations"},
             )
             st.plotly_chart(
                 hist, width="stretch", config={"displayModeBar": False, "responsive": True}
