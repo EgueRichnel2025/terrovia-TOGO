@@ -5,12 +5,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from math import ceil
 from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+
+from dashboard.aggregate_preview import load_aggregate_data, render_aggregate_preview
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data/processed/accessibility"
@@ -60,33 +63,24 @@ METRICS = {
 
 
 @st.cache_data(show_spinner="Chargement des données territoriales…")
-def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict, dict]:
-    required = [
-        "small_farms_potential_accessibility.csv",
-        "regional_accessibility_summary.csv",
-        "regions_accessibility.geojson",
-        "methodology.json",
-    ]
-    missing = [name for name in required if not (DATA / name).is_file()]
-    if missing:
-        st.error("Les données locales nécessaires au tableau de bord ne sont pas disponibles.")
-        st.markdown(
-            "Le dépôt public contient le code et la méthodologie, mais pas les données détaillées. "
-            "Elles ne sont pas redistribuées tant que leurs licences et conditions de réutilisation "
-            "ne sont pas confirmées."
-        )
-        st.markdown("Après validation des droits d'accès, placez les fichiers requis dans :")
-        st.code("data/processed/accessibility/")
-        st.code("\n".join(missing))
-        st.stop()
+def load_data() -> tuple[pd.DataFrame | None, pd.DataFrame, dict, dict, pd.DataFrame]:
+    """Load detailed local data when available, otherwise use safe aggregates."""
+    overall, summary, methodology = load_aggregate_data(DATA)
+    force_aggregate = os.getenv("TERROVIA_AGGREGATE_ONLY", "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "oui",
+    }
+    farms_path = DATA / "small_farms_potential_accessibility.csv"
+    regions_path = DATA / "regions_accessibility.geojson"
+    if force_aggregate or not farms_path.is_file() or not regions_path.is_file():
+        return None, summary, {}, methodology, overall
 
-    farms = pd.read_csv(DATA / "small_farms_potential_accessibility.csv")
-    summary = pd.read_csv(DATA / "regional_accessibility_summary.csv")
-    with (DATA / "regions_accessibility.geojson").open(encoding="utf-8") as stream:
+    farms = pd.read_csv(farms_path)
+    with regions_path.open(encoding="utf-8") as stream:
         regions = json.load(stream)
-    with (DATA / "methodology.json").open(encoding="utf-8") as stream:
-        methodology = json.load(stream)
-    return farms, summary, regions, methodology
+    return farms, summary, regions, methodology, overall
 
 
 def inject_theme() -> None:
@@ -610,7 +604,10 @@ def make_regional_bar(summary: pd.DataFrame, median_col: str, selected_region: s
 
 
 def render_dashboard_content(page_key: str) -> None:
-    farms, summary, geojson, methodology = load_data()
+    farms, summary, geojson, methodology, overall = load_data()
+    if farms is None:
+        render_aggregate_preview(page_key, overall, summary, methodology)
+        return
 
     st.markdown(
         """<div class="hero">

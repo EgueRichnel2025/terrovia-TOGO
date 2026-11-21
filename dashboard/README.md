@@ -7,6 +7,19 @@
 
 Puis ouvrir l'adresse locale affichée par Streamlit, généralement http://localhost:8501.
 
+## Modes de fonctionnement
+
+Le tableau de bord choisit automatiquement son mode selon les fichiers présents :
+
+- **Mode complet local** : si le CSV détaillé des exploitations et le GeoJSON régional sont disponibles, toutes les fonctions détaillées sont activées.
+- **Mode agrégé** : si les données individuelles ou le GeoJSON ne sont pas disponibles, l'application utilise uniquement les trois synthèses nationales/régionales et le fichier méthodologique. Il permet de consulter les résultats nationaux et de comparer les cinq régions, sans coordonnées ni identifiants individuels.
+
+Pour forcer le mode agrégé sur une machine qui possède aussi les données détaillées :
+
+    TERROVIA_AGGREGATE_ONLY=1 uv run streamlit run dashboard/app.py
+
+Le mode agrégé ne remplace pas les données sources et ne permet pas les classements communaux ni l'exploration des parcelles.
+
 ## Parcours de l'application
 
 1. **Vue d'ensemble** : périmètre de l'analyse, comparaison des distances médianes des sept familles de services et exemple d'interprétation nationale.
