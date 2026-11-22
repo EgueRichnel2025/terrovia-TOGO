@@ -24,8 +24,9 @@ Le mode agrégé ne remplace pas les données sources et ne permet pas les class
 ## Parcours de l'application
 
 1. **Vue d'ensemble** : périmètre de l'analyse, comparaison des distances médianes des sept familles de services et exemple d'interprétation nationale.
-2. **Explorer les territoires** : filtres région/service/repère, indicateurs, carte nationale, comparaison régionale et classements communaux. Les distributions, détails individuels et exports restent accessibles dans des sections dédiées.
-3. **Méthode et limites** : explication des calculs, définitions des indicateurs et limites scientifiques.
+2. **Explorer les territoires** : filtres région/service/repère, indicateurs, carte du Togo et comparaison graphique des cinq régions côte à côte, puis classements communaux. Les distributions, détails et exports restent accessibles dans des sections dédiées.
+3. **Profils d’accessibilité** : segmentation exploratoire K-Means, composition des trois profils, signatures de distance et répartition régionale. Seuls les agrégats sont affichés ; les affectations individuelles restent locales.
+4. **Méthode et limites** : explication des calculs, définitions des indicateurs, étapes du traitement et limites scientifiques.
 
 Le guide détaillé est dans docs/USER_GUIDE.md.
 
@@ -44,3 +45,10 @@ Elle ne reconstruit pas automatiquement ces fichiers à partir des sources brute
 Les distances sont euclidiennes, en ligne droite, en EPSG:32631. Elles ne représentent ni un trajet routier ni un temps de parcours. Les seuils sont descriptifs et non normatifs. La présence d'un équipement dans les données ne garantit pas son fonctionnement.
 
 Le script scripts/prepare_streamlit_french.py règle aussi la langue du document HTML servi par Streamlit (fr) et empêche sa traduction automatique partielle par le navigateur. Il faut le relancer après une réinstallation ou une mise à jour de Streamlit. Pour rétablir le document d’origine : uv run python scripts/prepare_streamlit_french.py --restore.
+
+
+## Identité visuelle
+
+L’interface utilise trois couleurs fonctionnelles : bleu saphir (#174A6E) pour la structure, bleu océan (#267A9B) pour les graphiques et interactions, et vert jade (#16866A) pour les accents. Les surfaces restent blanches ou bleu-gris très pâle afin de préserver le contraste et la lisibilité.
+
+Les signaux territoriaux de la vue d’ensemble sont présentés sous forme de fiches autonomes, sans cartes imbriquées. La page d’exploration associe désormais la carte du Togo à un graphique comparatif des cinq régions. La page méthode présente les indicateurs et les étapes sous forme de blocs visuels.
