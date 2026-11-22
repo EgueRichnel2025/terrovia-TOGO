@@ -77,3 +77,14 @@ Une distance élevée signale un cas à examiner, pas automatiquement une absenc
 
 ## 9. Extensions méthodologiques conditionnelles
 Une analyse réseau pourra être envisagée après validation de la topologie, de l'accrochage des exploitations et des équipements, des composantes connexes et des coûts de déplacement. Un indice composite ou un problème de localisation-allocation ne devra être construit qu'après justification des variables, des poids, des unités de demande, des sites candidats et des seuils de service.
+
+
+## 10. Profils exploratoires par apprentissage non supervisé
+
+Une segmentation K-Means a été entraînée sur les sept distances euclidiennes disponibles pour les 13 076 exploitations. Les variables sont transformées par `log1p`, puis mises à l'échelle avec `RobustScaler`. Les modèles de 2 à 8 groupes sont comparés par silhouette, Davies-Bouldin, Calinski-Harabasz, taille minimale des groupes et stabilité entre initialisations (indice ARI).
+
+Le modèle retenu comporte trois profils. La silhouette observée est de 0,164 et la stabilité ARI moyenne de 0,991. La stabilité indique que l'algorithme retrouve des groupes similaires selon les initialisations ; la silhouette modérée indique toutefois un chevauchement entre les groupes. La segmentation doit donc être considérée comme exploratoire, et non comme une typologie naturelle ou définitive.
+
+Les profils sont décrits par leurs distributions de distances et leur composition régionale. Leur numérotation facilite la lecture ; elle ne constitue ni un indice composite, ni un classement de performance ou d'investissement. Les affectations individuelles et le modèle entraîné sont conservés dans les fichiers locaux non versionnés. Seuls les agrégats sont publiés.
+
+Cette extension ne dispose d'aucune variable cible ni vérité terrain. Aucune précision prédictive ne peut être calculée ou annoncée. Elle ne mesure ni distance routière, ni durée, ni coût, ni disponibilité, ni utilisation effective des services.

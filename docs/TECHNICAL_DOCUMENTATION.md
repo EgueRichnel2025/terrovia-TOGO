@@ -14,7 +14,7 @@ TERROVIA sépare les sources, les traitements, les résultats et l'interface :
 Le tableau de bord lit les fichiers préparés depuis data/processed/accessibility/. Il ne lit pas directement les GeoJSON bruts agricoles.
 
 ## 2. Environnement logiciel
-Le projet déclare Python >=3.13 et <3.14 dans pyproject.toml. Les dépendances principales comprennent GeoPandas, Shapely, PyProj, Pyogrio, Pandas, SciPy, NetworkX, Matplotlib, Plotly et Streamlit. Les outils de développement comprennent pytest et Ruff. uv.lock fixe les versions résolues.
+Le projet déclare Python >=3.13 et <3.14 dans pyproject.toml. Les dépendances principales comprennent GeoPandas, Shapely, PyProj, Pyogrio, Pandas, SciPy, NetworkX, Matplotlib, Plotly, Streamlit et scikit-learn. Tabulate sert à générer les tableaux Markdown des rapports. Les outils de développement comprennent pytest et Ruff. uv.lock fixe les versions résolues.
 
 Installation reproductible :
 
@@ -22,6 +22,8 @@ Installation reproductible :
 
 Lancer l'application :
 
+    uv run python scripts/prepare_streamlit_french.py
+    uv run python scripts/train_accessibility_profiles.py
     uv run streamlit run dashboard/app.py
 
 ## 3. Chaîne de traitement disponible
@@ -32,6 +34,7 @@ Les scripts sont conçus pour être exécutés depuis la racine du projet.
 3. scripts/audit_territorial_consistency.py : contrôles de cohérence des géométries administratives et de leur relation spatiale avec les couches agricoles préparées.
 4. scripts/analyze_potential_accessibility.py : calcul des distances euclidiennes depuis les points représentatifs des petites exploitations vers les géométries d'infrastructures les plus proches.
 5. scripts/create_accessibility_maps.py : génération des cartes statiques et de la couche régionale enrichie utilisée par le dashboard.
+6. scripts/train_accessibility_profiles.py : entraînement reproductible d'un K-Means non supervisé sur les sept distances, comparaison de 2 à 8 profils, évaluation de stabilité et export d'agrégats nationaux et régionaux. Le modèle, les affectations individuelles et les résultats détaillés restent dans data/processed/accessibility/model/ (données locales non versionnées).
 
 Avant de relancer un script, lire son code et les chemins de sortie afin d'éviter d'écraser des résultats dont on souhaite conserver une version. Les noms et les sorties détaillées sont décrits dans les rapports et dans les scripts.
 
@@ -43,6 +46,9 @@ Répertoire : data/processed/accessibility/
 - overall_accessibility_summary.csv : statistiques nationales par indicateur.
 - regions_accessibility.geojson : géométries régionales enrichies pour la carte.
 - methodology.json : CRS métrique, type de distance, effectifs et limites analytiques.
+- model/profils_accessibilite.csv : médianes et P90 par profil, sans identifiant individuel.
+- model/repartition_regionale_profils.csv : répartition agrégée des profils dans les régions.
+- model/metadonnees_modele.json : algorithme, variables, paramètres et métriques d'évaluation.
 
 Le tableau de bord échoue si les fichiers obligatoires sont absents ou si leurs colonnes attendues ont été renommées.
 
@@ -54,7 +60,8 @@ Le point d'entrée est dashboard/app.py. L'application :
 - applique les filtres région et équipement ;
 - calcule les statistiques descriptives du périmètre filtré ;
 - construit les graphiques avec Plotly ;
-- prépare les classements et les fichiers CSV exportables.
+- prépare les classements et les fichiers CSV exportables ;
+- affiche les profils K-Means à partir des seuls agrégats publiables.
 
 Les références courtes EXP-* sont générées pour l'affichage. Elles ne constituent pas un identifiant officiel des exploitations.
 
@@ -85,9 +92,19 @@ Les tests du dashboard peuvent également être complétés par Streamlit AppTes
 - étudier un modèle d'optimisation uniquement après définition justifiée de la demande, des sites candidats, des seuils et des fonctions de service.
 
 ## 9. Parcours utilisateur du dashboard
-L'application présente trois onglets :
+L'application présente quatre pages :
 - Vue d'ensemble : périmètre de l'analyse, comparaison des distances médianes des sept familles de services, tableau détaillé accessible sous le graphique et exemple d'interprétation sur les marchés.
 - Explorer les territoires : filtres région/service/repère, trois indicateurs principaux, carte conservant le contexte national, comparaison régionale, classement communal et exports CSV. La distribution des distances et les 20 exploitations les plus éloignées sont dans des sections repliables.
+- Profils d'accessibilité : comparaison des trois groupes exploratoires, signatures de distance et répartition régionale.
 - Méthode et limites : définitions en langage courant, étapes du calcul et limites scientifiques.
 
 Les filtres sont regroupés dans l'onglet d'exploration plutôt que dans la barre latérale. La page d'accueil privilégie la compréhension du périmètre et du constat national ; les analyses détaillées sont disponibles à la demande.
+
+
+## 10. Modèle de profils de proximité
+
+Le script `scripts/train_accessibility_profiles.py` charge uniquement les sept colonnes de distance, la région et la référence technique locale de l'exploitation. Les distances sont transformées par `log1p` et mises à l'échelle par `RobustScaler`. Les candidats K-Means (K=2 à 8) sont comparés avec silhouette, Davies-Bouldin, Calinski-Harabasz, part minimale de chaque groupe et stabilité ARI sur plusieurs initialisations. Les critères de sélection exigent au moins 1 % d'observations dans chaque groupe et un ARI moyen d'au moins 0,70.
+
+Le modèle retenu sur les données du 22 novembre 2026 comporte trois profils, une silhouette de 0,164 et un ARI moyen de 0,991. Les résultats sont stables entre initialisations mais leur séparation reste modérée. Le rapport `reports/PROFILS_ACCESSIBILITE_MODELE_2026-11-22.md` présente les métriques et les profils agrégés.
+
+Les fichiers d'affectation par exploitation et le modèle sérialisé ne doivent pas être ajoutés au dépôt public. La page du tableau de bord consomme uniquement les synthèses par profil et par région.

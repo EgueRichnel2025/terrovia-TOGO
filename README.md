@@ -18,6 +18,7 @@ Comment la proximité géographique des petites exploitations agricoles aux marc
 - Sept familles d'équipements analysées séparément.
 - Statistiques nationales et régionales : médianes, percentiles et parts au-delà de seuils descriptifs.
 - Comparaisons territoriales et exploration interactive.
+- Modèle K-Means non supervisé : trois profils exploratoires de proximité, évalués et comparés par région.
 - Audits géométriques et de cohérence territoriale documentés.
 
 Les seuils de 5 km et 10 km sont des repères descriptifs, pas des normes officielles. Les catégories d'équipements n'ont pas toutes la même fonction et ne doivent pas être classées comme si elles étaient interchangeables.
@@ -32,6 +33,7 @@ Installation et lancement depuis la racine :
 
     uv sync
     uv run python scripts/prepare_streamlit_french.py
+    uv run python scripts/train_accessibility_profiles.py
     uv run streamlit run dashboard/app.py
 
 Les données préparées nécessaires au dashboard sont des fichiers locaux sous data/processed/. Elles ne sont pas incluses dans ce dépôt public. Leur provenance, leurs licences et leurs conditions d'accès doivent être vérifiées avant utilisation.
@@ -53,6 +55,7 @@ Les données préparées nécessaires au dashboard sont des fichiers locaux sous
 - Feuille de route de finalisation : docs/ROADMAP_FINALISATION_CHALLENGE.md
 - Politique de publication : docs/PUBLICATION_POLICY.md
 - Analyse exploratoire : reports/ANALYSE_ACCESSIBILITE_POTENTIELLE_2026-11-20.md
+- Profils issus du modèle : reports/PROFILS_ACCESSIBILITE_MODELE_2026-11-22.md
 - Note décisionnelle territoriale : reports/NOTE_DECISIONNELLE_TERRITORIALE_2026-11-20.md
 - Registre de provenance : reports/REGISTRE_PROVENANCE_DONNEES.md
 
