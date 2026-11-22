@@ -508,6 +508,236 @@ def inject_theme() -> None:
         :focus-visible {
             outline-color: #267A9B !important;
         }
+
+        /* Finition TERROVIA : une identité sobre, trois couleurs fonctionnelles. */
+        [data-testid="stMainBlockContainer"] {
+            max-width: 1500px !important;
+            padding-top: .95rem !important;
+            padding-bottom: 2.1rem !important;
+        }
+
+        [data-testid="stSidebar"] {
+            width: 15.75rem !important;
+            min-width: 15.75rem !important;
+            max-width: 15.75rem !important;
+            background: #174A6E !important;
+        }
+        [data-testid="stSidebarNav"] {
+            padding: 0 .15rem;
+        }
+        [data-testid="stSidebarNav"] a {
+            border-radius: 9px !important;
+            margin: 2px 0 !important;
+            padding: .58rem .68rem !important;
+            transition: background .18s ease, transform .18s ease;
+        }
+        [data-testid="stSidebarNav"] a:hover {
+            background: rgba(255,255,255,.11) !important;
+            transform: translateX(2px);
+        }
+        [data-testid="stSidebarNav"] a[aria-current="page"] {
+            background: rgba(255,255,255,.15) !important;
+            box-shadow: inset 3px 0 0 #16866A;
+        }
+        .brand-lockup {
+            gap: 10px;
+            margin: .55rem 0 1.55rem;
+            padding: .72rem .65rem;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 13px;
+            background: rgba(255,255,255,.035);
+        }
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            color: #FFFFFF;
+            background: #16866A;
+        }
+        .side-footer {
+            padding-top: .15rem;
+            line-height: 1.55;
+        }
+
+        .hero {
+            padding: 1.05rem 1.4rem 1.1rem;
+            margin-bottom: .9rem;
+            border-radius: 17px;
+            box-shadow: 0 8px 24px rgba(23,74,110,.08);
+        }
+        .hero:after {
+            width: 245px;
+            height: 245px;
+            right: -92px;
+            top: -128px;
+            border-color: rgba(22,134,106,.28);
+            box-shadow: 0 0 0 28px rgba(22,134,106,.045),
+                        0 0 0 58px rgba(38,122,155,.035);
+        }
+        .hero-top {
+            gap: 8px;
+            margin-bottom: .58rem;
+        }
+        .hero-tag {
+            font-size: .72rem;
+            letter-spacing: .11em;
+        }
+        .hero h1 {
+            max-width: 790px;
+            font-size: clamp(1.55rem, 2.1vw, 2rem) !important;
+            line-height: 1.16;
+            margin-bottom: .48rem;
+        }
+        .hero p {
+            max-width: 780px;
+            font-size: .94rem !important;
+            line-height: 1.55;
+        }
+        .hero-foot {
+            margin-top: .75rem;
+        }
+
+        .section-head {
+            margin: 1.25rem 0 .62rem;
+            gap: 1rem;
+        }
+        .section-kicker {
+            font-size: .72rem;
+            letter-spacing: .13em;
+        }
+        .section-title {
+            font-size: 1.18rem !important;
+            line-height: 1.3;
+        }
+        .section-note {
+            font-size: .82rem !important;
+            max-width: 38%;
+            text-align: right;
+        }
+
+        .kpi-card {
+            min-height: 108px;
+            padding: .88rem .98rem .82rem;
+            border-radius: 13px;
+            box-shadow: 0 4px 14px rgba(23,74,110,.035);
+        }
+        .kpi-label {
+            font-size: .8rem !important;
+            letter-spacing: .045em;
+        }
+        .kpi-value {
+            font-size: 1.72rem !important;
+        }
+        .kpi-foot {
+            font-size: .78rem !important;
+            margin-top: .45rem;
+        }
+
+        /* Les métriques Streamlit deviennent de vraies cartes lisibles. */
+        [data-testid="stMetric"] {
+            height: 100%;
+            min-height: 98px;
+            box-sizing: border-box;
+            padding: .82rem .95rem .72rem;
+            border: 1px solid #D9E6ED;
+            border-top: 3px solid #267A9B;
+            border-radius: 13px;
+            background: #FFFFFF;
+            box-shadow: 0 4px 14px rgba(23,74,110,.035);
+        }
+        [data-testid="stMetricLabel"] p {
+            color: #607D8B !important;
+            font-size: .76rem !important;
+            font-weight: 700 !important;
+            letter-spacing: .055em;
+            line-height: 1.35;
+            text-transform: uppercase;
+        }
+        [data-testid="stMetricValue"] {
+            color: #174A6E !important;
+            font-family: 'Manrope', sans-serif !important;
+            font-size: 1.62rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -.045em;
+            line-height: 1.2;
+        }
+        [data-testid="stMetricDelta"] {
+            font-size: .76rem !important;
+        }
+
+        /* Toutes les alertes restent dans la palette, y compris les avertissements. */
+        [data-testid="stAlert"],
+        [data-testid="stAlert"] > div,
+        [data-testid="stAlert"] [data-baseweb="notification"] {
+            background: #EAF2F6 !important;
+            border: 1px solid #D9E6ED !important;
+            border-left: 3px solid #16866A !important;
+            border-radius: 12px !important;
+            color: #315B70 !important;
+        }
+        [data-testid="stAlert"] svg {
+            color: #267A9B !important;
+            fill: #267A9B !important;
+        }
+
+        [data-testid="stPlotlyChart"] {
+            border-radius: 13px;
+        }
+        [data-testid="stExpander"] {
+            margin: .45rem 0;
+            border-radius: 11px !important;
+        }
+        [data-testid="stExpander"] summary {
+            font-size: .9rem;
+            font-weight: 600;
+        }
+        [data-testid="stDownloadButton"] button,
+        [data-testid="stButton"] button {
+            min-height: 42px;
+            border-radius: 9px !important;
+            font-weight: 650 !important;
+            letter-spacing: .005em;
+            box-shadow: none !important;
+        }
+        .method-banner {
+            margin-bottom: .5rem;
+            border-radius: 10px;
+        }
+        .insight {
+            border-radius: 0 11px 11px 0;
+        }
+        .footnote {
+            border-top: 1px solid #D9E6ED;
+            margin-top: 1.2rem;
+            padding-top: .9rem;
+        }
+
+        @media (max-width: 900px) {
+            [data-testid="stSidebar"] {
+                width: min(88vw, 19rem) !important;
+                min-width: min(88vw, 19rem) !important;
+                max-width: min(88vw, 19rem) !important;
+            }
+            .section-note {
+                max-width: 100%;
+                text-align: left;
+            }
+        }
+        @media (max-width: 640px) {
+            [data-testid="stMainBlockContainer"] {
+                padding-top: .65rem !important;
+            }
+            [data-testid="stMetric"] {
+                min-height: 88px;
+                padding: .7rem .78rem;
+            }
+            [data-testid="stMetricValue"] {
+                font-size: 1.42rem !important;
+            }
+            .hero {
+                padding: .95rem 1rem 1rem;
+            }
+        }
         </style>
         """,
         unsafe_allow_html=True,
