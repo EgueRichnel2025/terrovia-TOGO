@@ -1,0 +1,25 @@
+{
+  "metric_crs": "EPSG:32631",
+  "distance_type": "Euclidean straight-line distance from representative point to nearest mapped facility geometry",
+  "demand_unit": "mapped small agricultural holding feature",
+  "farm_features": 13076,
+  "market_features": 1073,
+  "input_store_features": 463,
+  "cooperative_features": 6859,
+  "esop_features": 12,
+  "nursery_point_features": 728,
+  "nursery_other_polygon_features": 209,
+  "zaap_zapb_polygon_features": 144,
+  "thresholds_km_are_descriptive_only": [
+    5,
+    10
+  ],
+  "limitations": [
+    "No road-network route distance or travel time is estimated.",
+    "No road condition, seasonality, transport mode, service capacity, prices or opening-hour constraints are represented.",
+    "A mapped facility's existence does not prove that it is operational or accessible to every farmer.",
+    "Small-holding polygons are represented by an interior representative point; this is not a farm entrance or household location.",
+    "ZAAP/ZAPB layer is not semantically disambiguated and is reported under the combined source-layer label.",
+    "The nearest-neighbour result measures geometric proximity only."
+  ]
+}

@@ -1,0 +1,16 @@
+region_nom_bdd,cluster_id,nombre_exploitations,total_region,part_dans_region_pct,profil
+Centrale,1,10,389,2.5707,Profil 1
+Centrale,2,301,389,77.3779,Profil 2
+Centrale,3,78,389,20.0514,Profil 3
+Kara,1,518,1424,36.3764,Profil 1
+Kara,2,814,1424,57.1629,Profil 2
+Kara,3,92,1424,6.4607,Profil 3
+Maritime,1,756,5421,13.9458,Profil 1
+Maritime,2,3247,5421,59.8967,Profil 2
+Maritime,3,1418,5421,26.1575,Profil 3
+Plateaux,1,584,1453,40.1927,Profil 1
+Plateaux,2,814,1453,56.0220,Profil 2
+Plateaux,3,55,1453,3.7853,Profil 3
+Savanes,1,1690,4389,38.5054,Profil 1
+Savanes,2,192,4389,4.3746,Profil 2
+Savanes,3,2507,4389,57.1201,Profil 3

@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from dashboard.app import PALETTE, format_fr_number, make_regional_bar
+from dashboard.app import PALETTE, format_fr_number, make_regional_bar, resolve_data_directory
 
 
 def test_regional_comparison_orders_values_and_highlights_selected_region() -> None:
@@ -68,3 +68,25 @@ def test_french_number_format_uses_narrow_grouping_and_decimal_comma() -> None:
     assert format_fr_number(13_076) == "13\u202f076"
     assert format_fr_number(3.42, 2) == "3,42"
     assert format_fr_number(43.267, 1) == "43,3"
+
+
+def test_public_data_is_selected_when_private_farm_files_are_absent(tmp_path) -> None:
+    local = tmp_path / "data/processed/accessibility"
+    public = tmp_path / "data/public/accessibility"
+    local.mkdir(parents=True)
+    public.mkdir(parents=True)
+    (public / "overall_accessibility_summary.csv").write_text("indicator\n", encoding="utf-8")
+
+    assert resolve_data_directory(tmp_path) == public
+
+
+def test_full_local_data_takes_precedence_over_public_aggregates(tmp_path) -> None:
+    local = tmp_path / "data/processed/accessibility"
+    public = tmp_path / "data/public/accessibility"
+    local.mkdir(parents=True)
+    public.mkdir(parents=True)
+    (local / "small_farms_potential_accessibility.csv").touch()
+    (local / "regions_accessibility.geojson").touch()
+    (public / "overall_accessibility_summary.csv").write_text("indicator\n", encoding="utf-8")
+
+    assert resolve_data_directory(tmp_path) == local

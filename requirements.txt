@@ -1,0 +1,4 @@
+# Déploiement du dashboard TERROVIA en mode agrégé sur Streamlit Community Cloud
+streamlit>=1.50,<2
+pandas>=2.3,<4
+plotly>=6,<7

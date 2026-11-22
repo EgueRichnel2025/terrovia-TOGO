@@ -1,0 +1,61 @@
+{
+  "date_entrainement": "2026-11-22",
+  "modele": "K-Means",
+  "version_scikit_learn": "1.9.1",
+  "nombre_exploitations": 13076,
+  "nombre_variables": 7,
+  "variables": [
+    {
+      "colonne": "market_distance_km",
+      "libelle": "Marchés"
+    },
+    {
+      "colonne": "input_store_distance_km",
+      "libelle": "Magasins d'intrants"
+    },
+    {
+      "colonne": "cooperative_distance_km",
+      "libelle": "Coopératives"
+    },
+    {
+      "colonne": "esop_distance_km",
+      "libelle": "ESOP"
+    },
+    {
+      "colonne": "nursery_distance_km",
+      "libelle": "Pépinières ponctuelles"
+    },
+    {
+      "colonne": "nursery_other_distance_km",
+      "libelle": "Pépinières surfaciques"
+    },
+    {
+      "colonne": "zaap_zapb_distance_km",
+      "libelle": "ZAAP / ZAPB"
+    }
+  ],
+  "transformation": "log1p, puis RobustScaler (médiane et intervalle interquartile)",
+  "nombre_profils_retenu": 3,
+  "random_state": 42,
+  "initialisations_kmeans": 30,
+  "echantillon_silhouette": 3500,
+  "silhouette": 0.16426487286295835,
+  "davies_bouldin": 1.9134721961571046,
+  "calinski_harabasz": 2300.2435434920053,
+  "stabilite_ari_moyenne": 0.990730476102908,
+  "part_minimale_pct": 27.210156011012543,
+  "qualite_structure": "Structure exploratoire modérée",
+  "correspondance_cluster_profil": {
+    "2": 1,
+    "0": 2,
+    "1": 3
+  },
+  "limites": [
+    "Apprentissage non supervisé sans variable cible ni vérité terrain.",
+    "Les profils décrivent uniquement les sept distances euclidiennes cartographiées.",
+    "La segmentation ne mesure ni itinéraire routier, ni durée, ni coût, ni accès effectif.",
+    "Le modèle ne prédit pas la disponibilité, l'utilisation ou la qualité d'un service.",
+    "Le tri des profils sert uniquement à faciliter la lecture et ne constitue pas un indice composite.",
+    "Les affectations individuelles demeurent dans les fichiers locaux non versionnés."
+  ]
+}

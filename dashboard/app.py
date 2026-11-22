@@ -20,7 +20,22 @@ if str(ROOT) not in sys.path:
 
 from dashboard.aggregate_preview import load_aggregate_data, render_aggregate_preview  # noqa: E402
 
-DATA = ROOT / "data/processed/accessibility"
+
+def resolve_data_directory(root: Path) -> Path:
+    """Use full local data when available, otherwise the publishable aggregates."""
+    local_data = root / "data/processed/accessibility"
+    public_data = root / "data/public/accessibility"
+    has_full_data = (local_data / "small_farms_potential_accessibility.csv").is_file() and (
+        local_data / "regions_accessibility.geojson"
+    ).is_file()
+    if has_full_data:
+        return local_data
+    if (public_data / "overall_accessibility_summary.csv").is_file():
+        return public_data
+    return local_data
+
+
+DATA = resolve_data_directory(ROOT)
 
 PALETTE = {
     "forest": "#174A6E",  # Bleu saphir : structure et navigation
