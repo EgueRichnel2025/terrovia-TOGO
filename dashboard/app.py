@@ -711,6 +711,73 @@ def inject_theme() -> None:
             margin-top: 1.2rem;
             padding-top: .9rem;
         }
+        .signal-card {
+            height: 100%;
+            min-height: 220px;
+            box-sizing: border-box;
+            padding: 1.05rem 1.1rem .95rem;
+            border: 1px solid #D9E6ED;
+            border-top: 3px solid #267A9B;
+            border-radius: 14px;
+            background: #FFFFFF;
+            box-shadow: 0 5px 18px rgba(23,74,110,.035);
+            display: flex;
+            flex-direction: column;
+            gap: .45rem;
+        }
+        .signal-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: .5rem;
+        }
+        .signal-area {
+            color: #174A6E;
+            font: 700 .91rem 'Manrope', sans-serif;
+        }
+        .signal-tag {
+            flex: 0 0 auto;
+            padding: .2rem .45rem;
+            border-radius: 30px;
+            background: #EAF2F6;
+            color: #267A9B;
+            font-size: .62rem;
+            font-weight: 800;
+            letter-spacing: .06em;
+        }
+        .signal-label {
+            color: #607D8B;
+            font-size: .73rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin-top: .35rem;
+        }
+        .signal-value {
+            color: #174A6E;
+            font: 800 2rem 'Manrope', sans-serif;
+            line-height: 1.05;
+            letter-spacing: -.055em;
+        }
+        .signal-value span {
+            color: #267A9B;
+            font-size: .95rem;
+            letter-spacing: 0;
+            margin-left: .2rem;
+        }
+        .signal-meta {
+            color: #607D8B;
+            font-size: .75rem;
+            line-height: 1.45;
+            padding-top: .25rem;
+            border-top: 1px solid #EAF2F6;
+        }
+        .signal-action {
+            color: #315B70;
+            font-size: .84rem;
+            line-height: 1.55;
+            margin: auto 0 0;
+        }
 
         @media (max-width: 900px) {
             [data-testid="stSidebar"] {
@@ -833,8 +900,8 @@ def make_map(map_data: pd.DataFrame, geojson: dict, median_col: str) -> object:
         showframe=False,
     )
     fig.update_layout(
-        height=440,
-        margin={"l": 0, "r": 0, "t": 5, "b": 0},
+        height=470,
+        margin={"l": 0, "r": 4, "t": 8, "b": 4},
         paper_bgcolor=PALETTE["paper"],
         plot_bgcolor=PALETTE["paper"],
         font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"]},
@@ -967,7 +1034,7 @@ def render_profiles_page() -> None:
         y="Part nationale (%)",
         text="Part nationale (%)",
         color="Profil",
-        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+        color_discrete_sequence=[PALETTE["ocean"], PALETTE["sapphire"], PALETTE["jade"]],
     )
     fig.update_traces(
         texttemplate="%{text:.1f} %",
@@ -1027,7 +1094,7 @@ def render_profiles_page() -> None:
         y="Distance médiane (km)",
         text="Distance médiane (km)",
         color="Profil",
-        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+        color_discrete_sequence=[PALETTE["ocean"], PALETTE["sapphire"], PALETTE["jade"]],
     )
     fig.update_traces(
         texttemplate="%{text:.2f} km",
@@ -1088,7 +1155,7 @@ def render_profiles_page() -> None:
         color="profil",
         barmode="stack",
         category_orders={"region_nom_bdd": ["Centrale", "Kara", "Maritime", "Plateaux", "Savanes"]},
-        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+        color_discrete_sequence=[PALETTE["ocean"], PALETTE["sapphire"], PALETTE["jade"]],
         labels={
             "region_nom_bdd": "Région",
             "part_dans_region_pct": "Part dans la région (%)",
@@ -1344,40 +1411,55 @@ def render_dashboard_content(page_key: str) -> None:
             savanes = savanes_rows.iloc[0]
             plateaux = plateaux_rows.iloc[0]
             cards = st.columns(3, gap="medium")
-            with cards[0]:
-                with st.container(border=True):
-                    st.markdown("**Savanes · Magasins d'intrants**")
-                    st.metric("Exploitations à plus de 10 km", f"{savanes.input_over_10:.1f} %")
-                    st.caption(
-                        f"Médiane : {savanes.input_median:.2f} km · P90 : {savanes.input_p90:.2f} km · "
-                        f"{int(savanes.exploitations):,} exploitations".replace(",", " ")
-                    )
-                    st.write(
-                        "À vérifier : activité des magasins, stocks et circuits d'approvisionnement."
-                    )
-            with cards[1]:
-                with st.container(border=True):
-                    st.markdown("**Plateaux · Marchés**")
-                    st.metric("Exploitations à plus de 5 km", f"{plateaux.market_over_5:.1f} %")
-                    st.caption(
-                        f"Médiane : {plateaux.market_median:.2f} km · "
-                        f"{int(plateaux.exploitations):,} exploitations".replace(",", " ")
-                    )
-                    st.write(
-                        "À vérifier : localités concernées, marchés fréquentés et itinéraires praticables."
-                    )
-            with cards[2]:
-                with st.container(border=True):
-                    st.markdown("**Savanes · Pépinières surfaciques**")
-                    st.metric(
-                        "Distance médiane observée", f"{savanes.nursery_polygon_median:.1f} km"
-                    )
-                    st.caption(
-                        f"Médiane nationale : {farms.nursery_other_distance_km.median():.2f} km · "
-                        "signal atypique à contrôler"
-                    )
-                    st.write(
-                        "À vérifier : couverture de l'inventaire, géolocalisation et présence réelle."
+            signal_cards = [
+                (
+                    "Savanes · Magasins d'intrants",
+                    "Exploitations à plus de 10 km",
+                    f"{savanes.input_over_10:.1f}".replace(".", ","),
+                    "%",
+                    f"Médiane : {savanes.input_median:.2f} km · P90 : {savanes.input_p90:.2f} km · {int(savanes.exploitations):,} exploitations".replace(
+                        ",", " "
+                    ),
+                    "À vérifier : activité des magasins, disponibilité des stocks et circuits d'approvisionnement.",
+                    PALETTE["forest_light"],
+                ),
+                (
+                    "Plateaux · Marchés",
+                    "Exploitations à plus de 5 km",
+                    f"{plateaux.market_over_5:.1f}".replace(".", ","),
+                    "%",
+                    f"Médiane : {plateaux.market_median:.2f} km · {int(plateaux.exploitations):,} exploitations".replace(
+                        ",", " "
+                    ),
+                    "À vérifier : localités concernées, marchés fréquentés et itinéraires praticables.",
+                    PALETTE["sapphire"],
+                ),
+                (
+                    "Savanes · Pépinières surfaciques",
+                    "Distance médiane observée",
+                    f"{savanes.nursery_polygon_median:.1f}".replace(".", ","),
+                    "km",
+                    f"Médiane nationale : {farms.nursery_other_distance_km.median():.2f} km · signal atypique à contrôler",
+                    "À vérifier : couverture de l'inventaire, géolocalisation et présence réelle.",
+                    PALETTE["jade"],
+                ),
+            ]
+            for column, (area, label, value, unit, meta, action, accent) in zip(
+                cards, signal_cards, strict=True
+            ):
+                with column:
+                    st.markdown(
+                        f"""<div class="signal-card" style="border-top-color:{accent}">
+                        <div class="signal-card-top">
+                            <span class="signal-area">{area}</span>
+                            <span class="signal-tag">À VÉRIFIER</span>
+                        </div>
+                        <div class="signal-label">{label}</div>
+                        <div class="signal-value">{value}<span>{unit}</span></div>
+                        <div class="signal-meta">{meta}</div>
+                        <p class="signal-action">{action}</p>
+                        </div>""",
+                        unsafe_allow_html=True,
                     )
             st.caption(
                 "Ces signaux orientent les vérifications. Une distance en ligne droite ne prouve ni "
@@ -1522,12 +1604,33 @@ def render_dashboard_content(page_key: str) -> None:
             "La carte conserve les cinq régions pour garder le contexte national",
         )
         map_data = summary[["region_nom_bdd", "farm_count", median_col, p90_col]].copy()
-        with st.container(border=True):
-            st.plotly_chart(
-                make_map(map_data, geojson, median_col),
-                width="stretch",
-                config={"displayModeBar": False, "responsive": True},
-            )
+        map_column, comparison_column = st.columns([1.12, 0.88], gap="medium")
+        with map_column:
+            with st.container(border=True):
+                st.markdown("**Carte du Togo**")
+                st.plotly_chart(
+                    make_map(map_data, geojson, median_col),
+                    width="stretch",
+                    config={"displayModeBar": False, "responsive": True},
+                )
+                st.caption(
+                    "Survolez une région pour consulter sa médiane, son P90 et le nombre "
+                    "d'exploitations recensées."
+                )
+        with comparison_column:
+            with st.container(border=True):
+                st.markdown("**Comparer les régions**")
+                st.plotly_chart(
+                    make_regional_bar(summary, median_col, selected_region),
+                    width="stretch",
+                    config={"displayModeBar": False, "responsive": True},
+                )
+                st.caption(
+                    "Les régions sont ordonnées par distance médiane. Le jade met en évidence "
+                    "la région sélectionnée."
+                    if selected_region != "Toutes les régions"
+                    else "Les cinq régions sont classées de la médiane la plus faible à la plus élevée."
+                )
 
         with st.expander("Comparer les cinq régions en chiffres"):
             regional_stats = (
@@ -1693,39 +1796,86 @@ def render_dashboard_content(page_key: str) -> None:
             "Les définitions utiles pour interpréter les résultats",
         )
         st.subheader("Ce qui est mesuré")
-        st.write(
-            "Pour chaque petite exploitation cartographiée, TERROVIA calcule la distance "
-            "en ligne droite jusqu'à l'équipement recensé le plus proche. Le calcul est répété "
-            "séparément pour chaque famille de services."
-        )
-        st.subheader("Trois indicateurs")
+        with st.container(border=True):
+            st.markdown(
+                "**Une mesure de proximité géographique**\n\n"
+                "Pour chaque petite exploitation cartographiée, TERROVIA calcule la distance "
+                "en ligne droite jusqu'à l'équipement recensé le plus proche. Le calcul est "
+                "répété séparément pour chacune des sept familles de services. "
+                "Les calculs sont réalisés dans le système projeté EPSG:32631."
+            )
+        st.subheader("Trois indicateurs pour lire les résultats")
         definition_cols = st.columns(3, gap="medium")
-        with definition_cols[0]:
-            st.markdown(
-                "**Distance médiane**\n\nLa moitié des exploitations se trouve à cette distance ou moins."
-            )
-        with definition_cols[1]:
-            st.markdown(
-                "**90 % des distances**\n\nNeuf exploitations sur dix se trouvent à cette distance ou moins."
-            )
-        with definition_cols[2]:
-            st.markdown(
-                "**Part au-delà du repère**\n\nPourcentage d'exploitations dont la distance dépasse le curseur."
-            )
-        st.subheader("Étapes du calcul")
-        st.markdown(
-            "1. Préparer et contrôler les géométries des petites exploitations.\n"
-            "2. Placer un point représentatif à l'intérieur de chaque exploitation.\n"
-            "3. Calculer les distances vers la géométrie la plus proche de chaque service, en EPSG:32631.\n"
-            "4. Résumer les distances par région et par commune."
-        )
+        definitions = [
+            (
+                "01",
+                "Distance médiane",
+                "La moitié des exploitations se trouve à cette distance ou moins.",
+                PALETTE["ocean"],
+            ),
+            (
+                "02",
+                "90e percentile (P90)",
+                "Neuf exploitations sur dix se trouvent à cette distance ou moins.",
+                PALETTE["sapphire"],
+            ),
+            (
+                "03",
+                "Part au-delà du repère",
+                "Pourcentage d'exploitations dont la distance dépasse le seuil choisi.",
+                PALETTE["jade"],
+            ),
+        ]
+        for column, (number, title, description, accent) in zip(
+            definition_cols, definitions, strict=True
+        ):
+            with column:
+                st.markdown(
+                    f'<div class="signal-card" style="min-height:145px;border-top-color:{accent}">'
+                    f'<div class="signal-tag" style="width:max-content">{number}</div>'
+                    f'<div class="signal-area">{title}</div>'
+                    f'<p class="signal-action">{description}</p></div>',
+                    unsafe_allow_html=True,
+                )
+        st.subheader("Les quatre étapes du calcul")
+        steps = [
+            (
+                "01",
+                "Préparer",
+                "Contrôler les géométries des petites exploitations et des équipements.",
+            ),
+            (
+                "02",
+                "Représenter",
+                "Placer un point représentatif à l'intérieur de chaque exploitation.",
+            ),
+            (
+                "03",
+                "Mesurer",
+                "Calculer les distances vers la géométrie la plus proche de chaque service, en EPSG:32631.",
+            ),
+            ("04", "Synthétiser", "Résumer les distances par région et par commune."),
+        ]
+        step_cols = st.columns(4, gap="small")
+        for column, (number, title, description) in zip(step_cols, steps, strict=True):
+            with column:
+                st.markdown(
+                    f'<div class="signal-card" style="min-height:150px">'
+                    f'<div class="signal-tag" style="width:max-content">{number}</div>'
+                    f'<div class="signal-area">{title}</div>'
+                    f'<p class="signal-action">{description}</p></div>',
+                    unsafe_allow_html=True,
+                )
         st.subheader("Ce que les résultats ne disent pas")
         st.markdown(
-            "- Ils ne mesurent pas la distance par route ni le temps de trajet.\n"
-            "- Ils ne prennent pas en compte l'état des pistes, les saisons, les obstacles ou les modes de transport.\n"
-            "- Ils ne confirment pas qu'un équipement est ouvert, opérationnel, approvisionné ou accessible à tous.\n"
-            "- Le point représentatif d'une parcelle n'est pas forcément son entrée.\n"
-            "- Les inventaires peuvent être incomplets ; la couche source regroupe ZAAP et ZAPB sans les distinguer."
+            '<div class="method-banner"><b>LIMITES À GARDER EN TÊTE</b><br>'
+            "Les résultats ne mesurent ni les distances par route ni les temps de trajet. "
+            "Ils ne prennent pas en compte l'état des pistes, les saisons, les obstacles ou les modes de transport. "
+            "Ils ne confirment pas qu'un équipement est ouvert, opérationnel, approvisionné ou accessible à tous. "
+            "Le point représentatif d'une parcelle n'est pas forcément son entrée. "
+            "Les inventaires peuvent être incomplets ; la couche source regroupe ZAAP et ZAPB sans les distinguer."
+            "</div>",
+            unsafe_allow_html=True,
         )
         st.subheader("Données utilisées")
         st.write(
