@@ -94,14 +94,14 @@ SERVICE_COLUMNS = {
 
 EXPECTED_REGIONS = {"Centrale", "Kara", "Maritime", "Plateaux", "Savanes"}
 PALETTE = {
-    "forest": "#3D554A",
-    "forest_light": "#5D7668",
-    "paper": "#FBFAF6",
-    "ink": "#293B34",
-    "muted": "#6E7A71",
-    "clay": "#B77E68",
-    "gold": "#B69B70",
-    "line": "#E2E1D8",
+    "forest": "#174A6E",
+    "forest_light": "#267A9B",
+    "paper": "#FFFFFF",
+    "ink": "#16384A",
+    "muted": "#607D8B",
+    "clay": "#16866A",
+    "gold": "#174A6E",
+    "line": "#D9E6ED",
 }
 
 
@@ -253,7 +253,7 @@ def _chart_style(fig: object, height: int = 330) -> object:
         paper_bgcolor=PALETTE["paper"],
         plot_bgcolor=PALETTE["paper"],
         font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"], "size": 12},
-        xaxis={"showgrid": True, "gridcolor": "#E9E8E0", "zeroline": False},
+        xaxis={"showgrid": True, "gridcolor": "#EAF2F6", "zeroline": False},
         yaxis={"showgrid": False},
         showlegend=False,
     )
