@@ -14,6 +14,25 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+LIMITATION_TRANSLATIONS = {
+    "No road-network route distance or travel time is estimated.": "L'étude ne calcule ni distance par le réseau routier ni durée de déplacement.",
+    "No road condition, seasonality, transport mode, service capacity, prices or opening-hour constraints are represented.": "L'état des routes, les variations saisonnières, les modes de transport, la capacité des services, les prix et les horaires d'ouverture ne sont pas pris en compte.",
+    "A mapped facility's existence does not prove that it is operational or accessible to every farmer.": "La présence d'un équipement sur la carte ne prouve ni son fonctionnement ni son accessibilité à chaque producteur.",
+    "Small-holding polygons are represented by an interior representative point; this is not a farm entrance or household location.": "Chaque petite exploitation est représentée par un point situé à l'intérieur de sa parcelle. Ce point ne correspond pas nécessairement à une entrée d'exploitation ni au lieu d'habitation du producteur.",
+    "ZAAP/ZAPB layer is not semantically disambiguated and is reported under the combined source-layer label.": "La couche source ne permet pas de distinguer de façon fiable les ZAAP des ZAPB. Les résultats sont donc présentés sous l'appellation combinée « ZAAP / ZAPB ».",
+    "The nearest-neighbour result measures geometric proximity only.": "La méthode du plus proche voisin mesure uniquement une proximité géographique en ligne droite.",
+}
+
+
+def translate_limitations(limitations: list[str]) -> list[str]:
+    unknown = [item for item in limitations if item not in LIMITATION_TRANSLATIONS]
+    if unknown:
+        raise ValueError(
+            "Des limites méthodologiques ne disposent pas encore d'une traduction française."
+        )
+    return [LIMITATION_TRANSLATIONS[item] for item in limitations]
+
+
 SERVICE_COLUMNS = {
     "Marchés": {
         "indicator": "market_distance_km",
@@ -451,7 +470,7 @@ def _render_method(methodology: dict) -> None:
         "- **Part au-delà de 5 ou 10 km :** proportion des exploitations qui dépassent le repère choisi."
     )
     st.subheader("Limites à garder en tête")
-    limitations = methodology.get("limitations", [])
+    limitations = translate_limitations(methodology.get("limitations", []))
     if limitations:
         st.markdown("\n".join(f"- {item}" for item in limitations))
     st.warning(

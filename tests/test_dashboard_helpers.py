@@ -3,6 +3,7 @@
 from dashboard.app import (
     build_commune_summary,
     display_locality,
+    load_profile_outputs,
     stable_farm_reference,
 )
 
@@ -67,3 +68,18 @@ def test_commune_summary_sorts_highest_p90_first() -> None:
     result = build_commune_summary(frame, "market_distance_km", 5.0, 3)
 
     assert result["commune_nom_bdd"].tolist() == ["Commune 2", "Commune 1"]
+
+
+def test_profile_outputs_are_aggregate_and_cover_all_regions() -> None:
+    profiles, regional, metadata = load_profile_outputs()
+
+    assert metadata["nombre_profils_retenu"] == 3
+    assert profiles["nombre_exploitations"].sum() == 13_076
+    assert set(regional["region_nom_bdd"]) == {
+        "Centrale",
+        "Kara",
+        "Maritime",
+        "Plateaux",
+        "Savanes",
+    }
+    assert regional["part_dans_region_pct"].between(0, 100).all()

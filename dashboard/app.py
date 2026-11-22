@@ -653,10 +653,258 @@ def make_regional_bar(summary: pd.DataFrame, median_col: str, selected_region: s
     return fig
 
 
+def load_profile_outputs() -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    """Load only aggregate model outputs for the public-facing profile page."""
+    model_dir = DATA / "model"
+    required = [
+        model_dir / "profils_accessibilite.csv",
+        model_dir / "repartition_regionale_profils.csv",
+        model_dir / "metadonnees_modele.json",
+    ]
+    missing = [path.name for path in required if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(
+            "Les résultats du modèle sont absents. Exécutez "
+            "'uv run python scripts/train_accessibility_profiles.py'."
+        )
+    profiles = pd.read_csv(required[0])
+    regional = pd.read_csv(required[1])
+    metadata = json.loads(required[2].read_text(encoding="utf-8"))
+    expected_profiles = int(metadata.get("nombre_profils_retenu", 0))
+    if (
+        profiles.empty
+        or profiles["cluster_id"].nunique() != expected_profiles
+        or regional.empty
+        or not regional["part_dans_region_pct"].between(0, 100).all()
+    ):
+        raise ValueError("Les agrégats du modèle sont incomplets ou incohérents.")
+    return profiles, regional, metadata
+
+
+def render_profiles_page() -> None:
+    section_header(
+        "Apprentissage non supervisé",
+        "Des profils de proximité, pas un classement des exploitations",
+        "Sept distances géographiques comparées sur 13 076 petites exploitations",
+    )
+    try:
+        profiles, regional, metadata = load_profile_outputs()
+    except (FileNotFoundError, ValueError) as error:
+        st.warning(str(error))
+        st.info(
+            "La page des profils est alimentée par les résultats agrégés du modèle. "
+            "Les données individuelles et les affectations restent locales."
+        )
+        return
+
+    st.markdown(
+        '<div class="method-banner"><b>À LIRE AVANT D’INTERPRÉTER</b> '
+        "K-Means regroupe des exploitations qui présentent des distances similaires. "
+        "Il ne prédit ni l’accès réel, ni l’utilisation, ni la qualité des services. "
+        "Une distance faible ou élevée reste une mesure en ligne droite.</div>",
+        unsafe_allow_html=True,
+    )
+    k1, k2, k3, k4 = st.columns(4, gap="medium")
+    k1.metric("Exploitations analysées", f"{metadata['nombre_exploitations']:,}".replace(",", " "))
+    k2.metric("Profils retenus", str(metadata["nombre_profils_retenu"]))
+    k3.metric("Silhouette", f"{metadata['silhouette']:.3f}")
+    k4.metric("Stabilité moyenne (ARI)", f"{metadata['stabilite_ari_moyenne']:.3f}")
+    st.caption(
+        f"Modèle {metadata['modele']} · {metadata['version_scikit_learn']} · "
+        f"Entraînement du {metadata['date_entrainement']} · "
+        f"{metadata['qualite_structure']}. "
+        "La silhouette est modérée : les profils se recouvrent partiellement."
+    )
+
+    section_header(
+        "Composition des profils",
+        "Quelle part des exploitations appartient à chaque groupe ?",
+        "Les groupes sont ordonnés pour faciliter la lecture, sans score composite",
+    )
+    profile_display = profiles[["profil", "nombre_exploitations", "part_nationale_pct"]].rename(
+        columns={
+            "profil": "Profil",
+            "nombre_exploitations": "Exploitations",
+            "part_nationale_pct": "Part nationale (%)",
+        }
+    )
+    fig = px.bar(
+        profile_display,
+        x="Profil",
+        y="Part nationale (%)",
+        text="Part nationale (%)",
+        color="Profil",
+        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+    )
+    fig.update_traces(
+        texttemplate="%{text:.1f} %",
+        textposition="outside",
+        hovertemplate="%{x}<br>%{y:.1f} %<extra></extra>",
+    )
+    fig.update_layout(
+        height=300,
+        showlegend=False,
+        margin={"l": 8, "r": 8, "t": 20, "b": 8},
+        paper_bgcolor=PALETTE["paper"],
+        plot_bgcolor=PALETTE["paper"],
+        font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"]},
+        yaxis={
+            "title": None,
+            "range": [0, max(50, float(profile_display["Part nationale (%)"].max()) * 1.2)],
+        },
+        xaxis={"title": None},
+    )
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False, "responsive": True})
+    st.dataframe(
+        profile_display,
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "Part nationale (%)": st.column_config.NumberColumn(format="%.1f %%"),
+            "Exploitations": st.column_config.NumberColumn(format="%d"),
+        },
+    )
+
+    section_header(
+        "Signature des profils",
+        "Les distances qui distinguent les groupes",
+        "Médianes en kilomètres ; chaque famille de services conserve sa propre unité",
+    )
+    median_columns = {
+        "market_distance_km_mediane_km": "Marchés",
+        "input_store_distance_km_mediane_km": "Magasins d'intrants",
+        "cooperative_distance_km_mediane_km": "Coopératives",
+        "esop_distance_km_mediane_km": "ESOP",
+        "nursery_distance_km_mediane_km": "Pépinières ponctuelles",
+        "nursery_other_distance_km_mediane_km": "Pépinières surfaciques",
+        "zaap_zapb_distance_km_mediane_km": "ZAAP / ZAPB",
+    }
+    selected_metric = st.selectbox(
+        "Famille d'équipements à comparer",
+        list(median_columns),
+        format_func=lambda key: median_columns[key],
+        key="profile_metric",
+    )
+    chart_data = profiles[["profil", selected_metric]].rename(
+        columns={"profil": "Profil", selected_metric: "Distance médiane (km)"}
+    )
+    fig = px.bar(
+        chart_data,
+        x="Profil",
+        y="Distance médiane (km)",
+        text="Distance médiane (km)",
+        color="Profil",
+        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+    )
+    fig.update_traces(
+        texttemplate="%{text:.2f} km",
+        textposition="outside",
+        hovertemplate="%{x}<br>%{y:.2f} km<extra></extra>",
+    )
+    fig.update_layout(
+        height=320,
+        showlegend=False,
+        margin={"l": 8, "r": 8, "t": 20, "b": 8},
+        paper_bgcolor=PALETTE["paper"],
+        plot_bgcolor=PALETTE["paper"],
+        font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"]},
+        yaxis={"title": None},
+        xaxis={"title": None},
+    )
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False, "responsive": True})
+
+    st.subheader("Lecture synthétique")
+    st.markdown(
+        "- **Profil 1 :** distances médianes relativement plus faibles aux marchés, "
+        "magasins d'intrants, coopératives, ESOP et pépinières ponctuelles ; "
+        "distance plus élevée aux pépinières surfaciques que dans le profil 2.\n"
+        "- **Profil 2 :** distances médianes relativement plus faibles aux pépinières "
+        "surfaciques ; distances plus élevées aux ESOP et aux pépinières ponctuelles "
+        "que dans le profil 1.\n"
+        "- **Profil 3 :** distances médianes plus élevées aux magasins d'intrants, "
+        "ESOP et pépinières surfaciques ; distances plus faibles aux ZAAP / ZAPB "
+        "que dans les deux autres profils."
+    )
+    st.caption(
+        "Ces descriptions comparent les médianes des groupes entre elles. Elles ne "
+        "signifient pas qu'un profil est globalement meilleur ou moins bien desservi."
+    )
+
+    section_header(
+        "Répartition territoriale",
+        "Les profils sont-ils répartis de la même façon dans les régions ?",
+        "Part de chaque profil au sein de chaque région",
+    )
+    pivot = regional.pivot(
+        index="region_nom_bdd", columns="profil", values="part_dans_region_pct"
+    ).fillna(0)
+    pivot = pivot.reindex(["Centrale", "Kara", "Maritime", "Plateaux", "Savanes"])
+    pivot.index.name = "Région"
+    st.dataframe(
+        pivot.reset_index(),
+        width="stretch",
+        hide_index=True,
+        column_config={
+            column: st.column_config.NumberColumn(format="%.1f %%") for column in pivot.columns
+        },
+    )
+    fig = px.bar(
+        regional,
+        x="region_nom_bdd",
+        y="part_dans_region_pct",
+        color="profil",
+        barmode="stack",
+        category_orders={"region_nom_bdd": ["Centrale", "Kara", "Maritime", "Plateaux", "Savanes"]},
+        color_discrete_sequence=[PALETTE["forest_light"], PALETTE["gold"], PALETTE["clay"]],
+        labels={
+            "region_nom_bdd": "Région",
+            "part_dans_region_pct": "Part dans la région (%)",
+            "profil": "Profil",
+        },
+    )
+    fig.update_layout(
+        height=360,
+        margin={"l": 8, "r": 8, "t": 15, "b": 8},
+        paper_bgcolor=PALETTE["paper"],
+        plot_bgcolor=PALETTE["paper"],
+        font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"]},
+        yaxis={"title": "Part dans la région (%)", "range": [0, 100]},
+        xaxis={"title": None},
+        legend={"orientation": "h", "y": 1.12},
+    )
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False, "responsive": True})
+
+    st.subheader("Comment le modèle a été construit")
+    st.write(
+        "Les distances ont été transformées par logarithme (log1p), puis mises à "
+        "l'échelle par médiane et intervalle interquartile (RobustScaler). "
+        "Les nombres de groupes de 2 à 8 ont été comparés avec les indices de "
+        "silhouette, Davies-Bouldin et Calinski-Harabasz, ainsi qu'avec la stabilité "
+        "entre plusieurs initialisations."
+    )
+    st.caption(
+        f"Silhouette : {metadata['silhouette']:.3f} · "
+        f"Davies-Bouldin : {metadata['davies_bouldin']:.3f} · "
+        f"Calinski-Harabasz : {metadata['calinski_harabasz']:.1f} · "
+        f"Part du plus petit profil : {metadata['part_minimale_pct']:.1f} %."
+    )
+    with st.expander("Consulter les médianes et les 90e percentiles par profil"):
+        detailed = profiles.copy()
+        st.dataframe(detailed, width="stretch", hide_index=True)
+    st.warning(
+        "Le modèle est exploratoire et non supervisé : il n'existe pas de vérité terrain "
+        "permettant de mesurer une précision prédictive. Il ne remplace pas une analyse "
+        "des trajets routiers, des coûts, de la saisonnalité ou du fonctionnement des services."
+    )
+
+
 def render_dashboard_content(page_key: str) -> None:
     farms, summary, geojson, methodology, overall = load_data()
     if farms is None:
-        render_aggregate_preview(page_key, overall, summary, methodology)
+        if page_key == "profiles":
+            render_profiles_page()
+        else:
+            render_aggregate_preview(page_key, overall, summary, methodology)
         return
 
     st.markdown(
@@ -675,6 +923,10 @@ def render_dashboard_content(page_key: str) -> None:
         "</div>",
         unsafe_allow_html=True,
     )
+
+    if page_key == "profiles":
+        render_profiles_page()
+        return
 
     if page_key == "overview":
         section_header(
@@ -1305,6 +1557,13 @@ def main() -> None:
                 icon=":material/map:",
                 url_path="explorer",
                 help="Comparer les régions, examiner les services et repérer les territoires à approfondir.",
+            ),
+            st.Page(
+                render_profiles_page,
+                title="Profils d'accessibilité",
+                icon=":material/hub:",
+                url_path="profils",
+                help="Découvrir les profils de proximité issus du modèle non supervisé.",
             ),
             st.Page(
                 render_method_page,

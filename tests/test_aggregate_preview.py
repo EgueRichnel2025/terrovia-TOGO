@@ -9,6 +9,7 @@ from dashboard.aggregate_preview import (
     build_national_summary,
     build_regional_view,
     load_aggregate_data,
+    translate_limitations,
     validate_aggregate_frames,
 )
 
@@ -61,3 +62,14 @@ def test_validation_rejects_missing_region() -> None:
 
     with pytest.raises(ValueError, match="cinq régions"):
         validate_aggregate_frames(overall, incomplete, methodology)
+
+
+def test_limitations_are_translated_to_french_and_unknown_values_fail() -> None:
+    translated = translate_limitations(
+        ["No road-network route distance or travel time is estimated."]
+    )
+    assert translated == [
+        "L'étude ne calcule ni distance par le réseau routier ni durée de déplacement."
+    ]
+    with pytest.raises(ValueError, match="traduction française"):
+        translate_limitations(["New limitation in English."])

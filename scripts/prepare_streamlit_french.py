@@ -1,4 +1,4 @@
-"""Declare the Streamlit shell as French to avoid partial browser translation."""
+"""Déclare le français comme langue du document HTML servi par Streamlit."""
 
 from __future__ import annotations
 

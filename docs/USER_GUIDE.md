@@ -9,13 +9,15 @@ L'objectif est de comparer les distances entre territoires et de repérer les si
 Depuis la racine du projet :
 
     uv sync
+    uv run python scripts/prepare_streamlit_french.py
+    uv run python scripts/train_accessibility_profiles.py
     uv run streamlit run dashboard/app.py
 
 Ouvrir l'adresse locale indiquée dans le terminal, généralement http://localhost:8501. Laisser le terminal ouvert pendant l'utilisation. Pour arrêter l'application, revenir au terminal et faire Ctrl+C.
 
 ## Le parcours dans le tableau de bord
 
-L'application comporte trois pages accessibles depuis le menu de navigation latéral. Le parcours conseillé va de la synthèse générale vers l'exploration, puis vers les explications méthodologiques.
+L'application comporte quatre pages accessibles depuis le menu de navigation latéral. Le parcours conseillé va de la synthèse générale vers l'exploration et les profils, puis vers les explications méthodologiques.
 
 ### 1. Vue d'ensemble
 C'est la page d'accueil. Elle donne immédiatement le périmètre de l'analyse :
@@ -47,7 +49,14 @@ Le classement communal aide à repérer les communes qui méritent une vérifica
 
 Les boutons de téléchargement exportent le classement communal et les observations filtrées au format CSV. Les fichiers correspondent à la sélection active. Les références EXP-* sont des références d'affichage générées par le tableau de bord ; elles ne remplacent pas les identifiants officiels.
 
-### 3. Méthode et limites
+### 3. Profils d'accessibilité
+Cette page présente les trois groupes exploratoires obtenus par K-Means à partir des sept distances. Elle permet de comparer leur poids dans l'ensemble des exploitations, leurs distances médianes par famille de services et leur répartition dans les cinq régions.
+
+La silhouette du modèle retenu est de 0,164 : la séparation des groupes est modérée et certains profils se recouvrent. La stabilité ARI moyenne entre initialisations est de 0,991. Cette stabilité signifie que l'algorithme retrouve des groupes proches lorsqu'il est relancé ; elle ne valide pas à elle seule une typologie réelle.
+
+Les profils ne sont pas des notes de performance. Ils ne disent pas si une exploitation accède réellement à un service et ne doivent pas être utilisés seuls pour décider d'un investissement.
+
+### 4. Méthode et limites
 Cet onglet explique comment les chiffres sont calculés et comment les interpréter :
 - **Médiane :** la moitié des exploitations a une distance inférieure ou égale à cette valeur.
 - **P90 :** neuf exploitations sur dix ont une distance inférieure ou égale à cette valeur.
@@ -61,7 +70,7 @@ Les distances sont calculées en ligne droite dans le système projeté métriqu
 
 Elles ne correspondent pas à des distances routières ou à des temps de trajet. Le calcul ne prend pas en compte l'état des routes, les pistes saisonnières, les obstacles, le mode de transport, les coûts, les horaires, la capacité ou le fonctionnement réel des équipements.
 
-Les 5 km, 10 km et le P75 sont des repères descriptifs exploratoires, pas des normes nationales. Une distance élevée signale un cas à examiner ; elle ne prouve pas qu'une exploitation est privée d'un service.
+Les 5 km, 10 km et le P75 sont des repères descriptifs exploratoires, pas des normes nationales. Les profils K-Means sont eux aussi exploratoires et fondés uniquement sur les distances cartographiques. Une distance élevée signale un cas à examiner ; elle ne prouve pas qu'une exploitation est privée d'un service.
 
 La couche source ZAAP/ZAPB ne distingue pas les deux catégories. Certaines correspondances administratives restent à confirmer. L'inventaire des équipements peut être incomplet.
 
