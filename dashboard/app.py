@@ -811,6 +811,12 @@ def inject_theme() -> None:
     )
 
 
+def format_fr_number(value: float | int, decimals: int = 0) -> str:
+    """Format a number with French grouping and decimal separators."""
+    rendered = f"{value:,.{decimals}f}"
+    return rendered.replace(",", "\u202f").replace(".", ",")
+
+
 def section_header(kicker: str, title: str, note: str = "") -> None:
     st.markdown(
         f"""<div class="section-head"><div><div class="section-kicker">{kicker}</div>
@@ -947,7 +953,14 @@ def make_regional_bar(summary: pd.DataFrame, median_col: str, selected_region: s
         plot_bgcolor=PALETTE["paper"],
         font={"family": "DM Sans, sans-serif", "color": PALETTE["ink"], "size": 10},
         xaxis={"showgrid": True, "gridcolor": "#EAF2F6", "zeroline": False, "title": None},
-        yaxis={"showgrid": False, "title": None, "tickfont": {"size": 10}},
+        yaxis={
+            "showgrid": False,
+            "title": None,
+            "tickfont": {"size": 10},
+            "categoryorder": "array",
+            "categoryarray": plot["region_nom_bdd"].tolist(),
+            "autorange": "reversed",
+        },
         showlegend=False,
     )
     return fig
@@ -1005,7 +1018,7 @@ def render_profiles_page() -> None:
         unsafe_allow_html=True,
     )
     k1, k2, k3, k4 = st.columns(4, gap="medium")
-    k1.metric("Exploitations analysées", f"{metadata['nombre_exploitations']:,}".replace(",", " "))
+    k1.metric("Exploitations analysées", format_fr_number(metadata["nombre_exploitations"]))
     k2.metric("Profils retenus", str(metadata["nombre_profils_retenu"]))
     k3.metric("Silhouette", f"{metadata['silhouette']:.3f}")
     k4.metric("Stabilité moyenne (ARI)", f"{metadata['stabilite_ari_moyenne']:.3f}")
@@ -1239,7 +1252,7 @@ def render_dashboard_content(page_key: str) -> None:
             st.markdown(
                 card(
                     "PETITES EXPLOITATIONS",
-                    f"{len(farms):,}".replace(",", " "),
+                    format_fr_number(len(farms)),
                     "",
                     "Entités incluses dans les calculs",
                     PALETTE["forest_light"],
@@ -1354,7 +1367,7 @@ def render_dashboard_content(page_key: str) -> None:
             st.markdown(
                 card(
                     "MÉDIANE NATIONALE · MARCHÉS",
-                    f"{market_median:.2f}",
+                    format_fr_number(market_median, 2),
                     "km",
                     "Distance en ligne droite",
                     PALETTE["gold"],
@@ -1366,7 +1379,7 @@ def render_dashboard_content(page_key: str) -> None:
                 f"""<div class="insight" style="height:100%">
                 <strong>Observation :</strong> la région « {farthest_market_region["region_nom_bdd"]} »
                 présente la distance médiane la plus élevée aux marchés parmi les cinq régions
-                ({farthest_market_region["market_distance_median_km"]:.2f} km).
+                ({format_fr_number(farthest_market_region["market_distance_median_km"], 2)} km).
                 <br><br><strong>Ce que cela signifie :</strong> cette région mérite une analyse plus approfondie.
                 Ce résultat ne prouve pas que les producteurs sont privés d'accès à un marché.
                 </div>""",
@@ -1547,7 +1560,7 @@ def render_dashboard_content(page_key: str) -> None:
             st.markdown(
                 card(
                     "DISTANCE MÉDIANE",
-                    f"{median:.2f}",
+                    format_fr_number(median, 2),
                     "km",
                     f"Vers le {entity_label} le plus proche",
                     PALETTE["gold"],
@@ -1558,7 +1571,7 @@ def render_dashboard_content(page_key: str) -> None:
             st.markdown(
                 card(
                     "90 % DES DISTANCES",
-                    f"{p90:.2f}",
+                    format_fr_number(p90, 2),
                     "km",
                     "Ne dépassent pas cette valeur",
                     PALETTE["forest_light"],
@@ -1569,9 +1582,9 @@ def render_dashboard_content(page_key: str) -> None:
             st.markdown(
                 card(
                     "AU-DELÀ DU REPÈRE",
-                    f"{over_pct:.1f}",
+                    format_fr_number(over_pct, 1),
                     "%",
-                    f"{over_count:,} exploitations".replace(",", " "),
+                    f"{format_fr_number(over_count)} exploitations",
                     PALETTE["clay"],
                 ),
                 unsafe_allow_html=True,
@@ -1580,20 +1593,20 @@ def render_dashboard_content(page_key: str) -> None:
         national_median = float(farms[metric].median())
         if selected_region == "Toutes les régions":
             lead = (
-                f"La médiane nationale est de {median:.2f} km. "
+                f"La médiane nationale est de {format_fr_number(median, 2)} km. "
                 "La carte permet de voir comment cette distance varie selon les régions."
             )
         else:
             difference = median - national_median
             direction = "supérieure" if difference > 0 else "inférieure"
             lead = (
-                f"Dans la région « {selected_region} », la médiane est de {median:.2f} km, "
-                f"soit {abs(difference):.2f} km {direction} à la médiane nationale "
-                f"({national_median:.2f} km)."
+                f"Dans la région « {selected_region} », la médiane est de {format_fr_number(median, 2)} km, "
+                f"soit {format_fr_number(abs(difference), 2)} km {direction} à la médiane nationale "
+                f"({format_fr_number(national_median, 2)} km)."
             )
         st.markdown(
             f'<div class="insight"><strong>À retenir :</strong> {lead} '
-            f"{over_pct:.1f} % des exploitations dépassent le repère de {threshold:.1f} km. "
+            f"{format_fr_number(over_pct, 1)} % des exploitations dépassent le repère de {format_fr_number(threshold, 1)} km. "
             "Il s'agit d'un signal de proximité géographique, pas d'une mesure d'accès réel.</div>",
             unsafe_allow_html=True,
         )

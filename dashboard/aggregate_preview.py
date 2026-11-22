@@ -24,6 +24,12 @@ LIMITATION_TRANSLATIONS = {
 }
 
 
+def format_fr_number(value: float | int, decimals: int = 0) -> str:
+    """Format a number with French grouping and decimal separators."""
+    rendered = f"{value:,.{decimals}f}"
+    return rendered.replace(",", "\u202f").replace(".", ",")
+
+
 def translate_limitations(limitations: list[str]) -> list[str]:
     unknown = [item for item in limitations if item not in LIMITATION_TRANSLATIONS]
     if unknown:
@@ -281,7 +287,7 @@ def _render_overview(
     )
 
     k1, k2, k3 = st.columns(3)
-    k1.metric("Exploitations étudiées", f"{int(methodology['farm_features']):,}".replace(",", " "))
+    k1.metric("Exploitations étudiées", format_fr_number(int(methodology["farm_features"])))
     k2.metric("Régions couvertes", str(regional["region_nom_bdd"].nunique()))
     k3.metric("Familles de services", str(len(SERVICE_COLUMNS)))
     st.caption(
@@ -416,9 +422,9 @@ def _render_explorer(regional: pd.DataFrame) -> None:
         context = f"Résultats de la région {region}."
 
     k1, k2, k3 = st.columns(3)
-    k1.metric("Médiane régionale", f"{median:.2f} km")
-    k2.metric("P90 régional", f"{p90:.2f} km")
-    k3.metric(f"Part à plus de {threshold} km", f"{share:.1f} %")
+    k1.metric("Médiane régionale", f"{format_fr_number(median, 2)} km")
+    k2.metric("P90 régional", f"{format_fr_number(p90, 2)} km")
+    k3.metric(f"Part à plus de {threshold} km", f"{format_fr_number(share, 1)} %")
     st.caption(context)
 
     chart_data = filtered.sort_values("Médiane (km)", ascending=True)
